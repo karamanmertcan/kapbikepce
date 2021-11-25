@@ -49,7 +49,8 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
                   marginTop: '10%',
                   backgroundColor: '#fff',
                   padding: 5,
-                  borderRadius: 20
+                  borderRadius: 20,
+                  textAlign: 'center'
                 }}>
                 Hesabin Yok Mu ?
               </Text>

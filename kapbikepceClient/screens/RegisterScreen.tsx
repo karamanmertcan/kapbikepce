@@ -52,7 +52,8 @@ const Register: React.FunctionComponent<IRegisterProps> = (props) => {
                   marginTop: '10%',
                   backgroundColor: '#fff',
                   padding: 5,
-                  borderRadius: 20
+                  borderRadius: 20,
+                  textAlign: 'center'
                 }}>
                 Zaten Hesabin Varsa
               </Text>
