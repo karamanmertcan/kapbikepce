@@ -3,6 +3,7 @@ import React from 'react';
 import StackScreen from './navigations/StackScreen';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import IntroSlider from './components/IntroSlider';
 
 export default function App() {
   return (

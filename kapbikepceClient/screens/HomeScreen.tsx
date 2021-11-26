@@ -10,7 +10,19 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View>
+        <View style={styles.header}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 25
+            }}>
+            Kap Bi Kepçe
+          </Text>
+        </View>
+        <View
+          style={{
+            marginTop: 10
+          }}>
           <SeacrhBarComp />
         </View>
         <View style={styles.categoryCard}>
@@ -42,6 +54,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30
+  },
+  header: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff4757',
+    height: '10%',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20
   }
 });
 
