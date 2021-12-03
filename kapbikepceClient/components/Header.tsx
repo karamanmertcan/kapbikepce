@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     height: '10%',
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-    position: 'absolute',
+    position: 'relative',
     zIndex: 100,
     top: 0,
     left: 0

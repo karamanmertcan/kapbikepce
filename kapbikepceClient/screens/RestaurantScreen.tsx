@@ -1,19 +1,52 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, Image, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+  Image,
+  Button,
+  ScrollView
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/core';
 
-import TabView from '../components/TabView';
 import Header from '../components/Header';
+import RestaurantFoodCard from '../components/RestaurantFoodCard';
 
 interface IRestaurantScreenProps {}
 
+interface FakeStoreApi {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
+
 const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props) => {
+  const [product, setProducts] = React.useState<FakeStoreApi[]>([]);
+
   const windowHeight = useWindowDimensions().height;
   const navigation = useNavigation<any>();
   const route = useRoute();
   console.log(route.name);
+
+  const getProductsFromApi = async () => {
+    const data = await fetch('https://fakestoreapi.com/products');
+    const res = await data.json();
+    setProducts(res);
+  };
+
+  React.useEffect(() => {
+    getProductsFromApi();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -95,14 +128,19 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
+                flexDirection: 'column',
                 width: '100%',
                 height: 100,
                 overflow: 'hidden',
                 borderRadius: 10,
                 paddingTop: 10
               }}>
-              <TabView />
+              <ScrollView>
+                {product &&
+                  product.map((product) => (
+                    <RestaurantFoodCard key={product.id} product={product} />
+                  ))}
+              </ScrollView>
             </View>
           </View>
         </View>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Entypo } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import StackScreen from '../navigations/StackScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,7 +19,8 @@ export default function TabNavigation() {
           },
           tabBarHideOnKeyboard: true,
 
-          tabBarActiveTintColor: '#fff'
+          tabBarActiveTintColor: '#fff',
+          tabBarInactiveTintColor: '#fff'
         }}>
         <Tab.Screen
           name='Sipariş'
@@ -35,7 +36,7 @@ export default function TabNavigation() {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Ionicons name='ios-cart-outline' size={24} color='black' />
+              <Entypo name='shopping-basket' size={24} color='white' />
             )
           }}
         />
