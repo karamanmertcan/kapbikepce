@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import TabNavigation from '../navigations/TabNavigation';
 import RestaurantScreen from '../screens/RestaurantScreen';
+import { Button } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,10 +57,6 @@ function StackScreen() {
         options={{
           headerShown: false,
           title: 'Kap Bi Kepçe'
-          // headerStyle: {
-          //   backgroundColor: '#ff4757'
-          // },
-          // headerTitleAlign: 'center'
         }}
       />
     </Stack.Navigator>

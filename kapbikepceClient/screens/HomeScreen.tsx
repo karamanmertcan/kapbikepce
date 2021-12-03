@@ -1,14 +1,40 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, useWindowDimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryCard from '../components/CategoryCard';
 import RestaurantCard from '../components/ResteurantCard';
 import SeacrhBarComp from '../components/SearchBar';
+import * as Location from 'expo-location';
 
 interface IHomeScreenProps {}
 
 const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
+  const [location, setLocation] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<any>(null);
   const windowHeight = useWindowDimensions().height;
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+    console.log(text);
+  } else if (location) {
+    text = JSON.stringify(location);
+    console.log(text);
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
       <View style={[styles.container]}>
