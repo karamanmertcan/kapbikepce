@@ -21,7 +21,7 @@ interface IRestaurantFoodCardProps {
 }
 
 const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (props) => {
-  const [addItem, setAddItem] = useAtom(addItemToCart);
+  const [_, setAddItem] = useAtom(addItemToCart);
   return (
     <View style={[styles.restaurantFoodCard]}>
       <View style={styles.container}>

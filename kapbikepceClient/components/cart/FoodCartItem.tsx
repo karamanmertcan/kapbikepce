@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Image, StyleSheet, Text, View } from 'react-native';
 import { useAtom } from 'jotai';
-import { removeFromCart } from '../../store';
+import { removeFromCart, decreaseQty, increaseQty } from '../../store';
 import { Entypo } from '@expo/vector-icons';
 
 interface IFoodCartItemProps {
@@ -16,11 +16,15 @@ interface IFoodCartItemProps {
       rate: number;
       count: number;
     };
+    quantity: number;
   };
 }
 
 const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
-  const [removeItem, setRemoveItem] = useAtom(removeFromCart);
+  const [_, setRemoveItem] = useAtom(removeFromCart);
+  const [decreaseItemQty, setDecreaseItemQty] = useAtom(decreaseQty);
+  const [increaseItemQty, setIncreaseItemQty] = useAtom(increaseQty);
+
   return (
     <View style={styles.cartItem}>
       <View style={styles.cartItemLeft}>
@@ -51,7 +55,7 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
         </View>
         <View>
           <Text style={styles.cartItemRightText}>{props.item.title}</Text>
-          <Text style={styles.cartItemRightDesc}>{props.item.description.slice(0, 20)}</Text>
+          <Text style={styles.cartItemRightDesc}>{props.item.description?.slice(0, 20)}</Text>
         </View>
         <View
           style={{
@@ -67,16 +71,16 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
               justifyContent: 'center',
               alignItems: 'center'
             }}>
-            <Button title='-' color='#ff4757' />
+            <Button title='-' color='#ff4757' onPress={() => setDecreaseItemQty(props.item)} />
             <View
               style={{
                 height: '100%',
                 alignItems: 'center',
                 padding: 10
               }}>
-              <Text>1</Text>
+              <Text>{props.item.quantity}</Text>
             </View>
-            <Button title='+' color='#ff4757' />
+            <Button title='+' color='#ff4757' onPress={() => setIncreaseItemQty(props.item)} />
           </View>
         </View>
       </View>

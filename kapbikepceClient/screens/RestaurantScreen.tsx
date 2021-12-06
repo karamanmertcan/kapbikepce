@@ -14,6 +14,7 @@ import { useNavigation, useRoute } from '@react-navigation/core';
 
 import Header from '../components/Header';
 import RestaurantFoodCard from '../components/RestaurantFoodCard';
+import CommentBottomSheet from '../components/comments/CommentBottomSheet';
 
 interface IRestaurantScreenProps {}
 
@@ -47,6 +48,8 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
   React.useEffect(() => {
     getProductsFromApi();
   }, []);
+
+  const sheetRef = React.useRef<any>(null);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -112,19 +115,30 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
+                justifyContent: 'space-between',
                 paddingTop: 10
               }}>
-              <FontAwesome name='star' size={16} color='gold' />
-              <FontAwesome name='star' size={16} color='gold' />
-              <FontAwesome name='star' size={16} color='gold' />
-              <FontAwesome name='star-half-empty' size={16} color='gold' />
-              <Text
+              <View
                 style={{
-                  marginLeft: 10
+                  flexDirection: 'row'
                 }}>
-                (3.5) - 1221 Yorum
-              </Text>
+                <FontAwesome name='star' size={16} color='gold' />
+                <FontAwesome name='star' size={16} color='gold' />
+                <FontAwesome name='star' size={16} color='gold' />
+                <FontAwesome name='star-half-empty' size={16} color='gold' />
+                <Text
+                  style={{
+                    marginLeft: 10
+                  }}>
+                  (3.5) - 1221 Yorum
+                </Text>
+              </View>
+              <View>
+                <CommentBottomSheet />
+              </View>
+              <View></View>
             </View>
+
             <View
               style={{
                 flex: 1,
