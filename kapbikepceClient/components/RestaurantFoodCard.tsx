@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAtom } from 'jotai';
 import { addItemToCart } from '../store';
-import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 interface IRestaurantFoodCardProps {
   product: {
@@ -22,30 +22,38 @@ interface IRestaurantFoodCardProps {
 
 const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (props) => {
   const [_, setAddItem] = useAtom(addItemToCart);
+  const navigation = useNavigation<any>();
   return (
-    <View style={[styles.restaurantFoodCard]}>
-      <View style={styles.container}>
-        <View style={styles.foodCardLeft}>
-          <Image
-            style={styles.foodImage}
-            source={{
-              uri: `${props.product.image}`
-            }}
-            resizeMode='contain'
-          />
-        </View>
-        <View style={styles.foodCardRight}>
-          <Text style={styles.foodTitle}>{props.product.title}</Text>
-          <Text>{props.product.description.slice(0, 20)}...</Text>
-          <View style={styles.addToCartContainer}>
-            <Text>{props.product.price} TL</Text>
-            <Button mode='contained' onPress={() => setAddItem(props.product)} color='#ff4757'>
-              +
-            </Button>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('FoodDetailsScreen', {
+          itemId: props.product.id
+        });
+      }}>
+      <View style={[styles.restaurantFoodCard]}>
+        <View style={styles.container}>
+          <View style={styles.foodCardLeft}>
+            <Image
+              style={styles.foodImage}
+              source={{
+                uri: `${props.product.image}`
+              }}
+              resizeMode='contain'
+            />
+          </View>
+          <View style={styles.foodCardRight}>
+            <Text style={styles.foodTitle}>{props.product.title}</Text>
+            <Text>{props.product.description.slice(0, 20)}...</Text>
+            <View style={styles.addToCartContainer}>
+              <Text>{props.product.price} TL</Text>
+              <Button mode='contained' onPress={() => setAddItem(props.product)} color='#ff4757'>
+                +
+              </Button>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

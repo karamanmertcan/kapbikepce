@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import TabNavigation from '../navigations/TabNavigation';
 import RestaurantScreen from '../screens/RestaurantScreen';
 import { Button } from 'react-native';
+import FoodDetailsScreen from '../screens/FoodDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,14 @@ function StackScreen() {
       <Stack.Screen
         name='RestaurantDetails'
         component={RestaurantScreen}
+        options={{
+          headerShown: false,
+          title: 'Kap Bi Kepçe'
+        }}
+      />
+      <Stack.Screen
+        name='FoodDetailsScreen'
+        component={FoodDetailsScreen}
         options={{
           headerShown: false,
           title: 'Kap Bi Kepçe'

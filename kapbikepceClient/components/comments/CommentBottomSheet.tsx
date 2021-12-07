@@ -1,47 +1,58 @@
 import React, { useRef } from 'react';
-import { SafeAreaView, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import BottomSheet from 'react-native-gesture-bottom-sheet';
+import { View, Button, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import CommentCard from './CommentCard';
 
-const Example = () => {
-  // Needed in order to use .show()
-  const bottomSheet = useRef();
+interface ICommentBottomSheet {}
 
+const CommentBottomSheet = (props: any) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600} />
-      <TouchableOpacity style={styles.button} onPress={() => bottomSheet.current.show()}>
-        <Text style={styles.text}>Open modal</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#000'
+      }}>
+      <RBSheet
+        ref={props.refRBSheet}
+        closeOnPressMask={true}
+        dragFromTopOnly={true}
+        height={500}
+        closeOnDragDown={true}
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16
+          }
+        }}>
+        <View style={{ flex: 1 }}>
+          <View>
+            <View style={{ height: 500 }}>
+              <ScrollView showsVerticalScrollIndicator={true}>
+                <View style={styles.container}>
+                  <Text>Name</Text>
+                  <Text>Jane doe</Text>
+                  <CommentCard />
+                  <CommentCard />
+                  <CommentCard />
+                  <CommentCard />
+                  <CommentCard />
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        </View>
+      </RBSheet>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    height: 50,
-    width: 150,
-    backgroundColor: '#140078',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    shadowColor: '#8559da',
-    shadowOpacity: 0.7,
-    shadowOffset: {
-      height: 4,
-      width: 4
-    },
-    shadowRadius: 5,
-    elevation: 6
-  },
-  text: {
-    color: 'white',
-    fontWeight: '600'
-  },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'column',
+    paddingVertical: 8
   }
 });
 
-export default Example;
+export default CommentBottomSheet;

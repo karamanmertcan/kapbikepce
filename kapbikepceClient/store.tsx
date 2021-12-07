@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage, hideMessage } from 'react-native-flash-message';
 
 export const storageItems = atom([]);
 
@@ -12,13 +13,25 @@ export const addItemToCart = atom(
 
     if (getItemsFromLocal !== null && itemToParse.length >= 1) {
       const existItem = itemToParse.find((item: any) => item.id === product.id);
+
       console.log('existItem', existItem);
 
       if (!existItem) {
+        console.log('selam sepet');
+        showMessage({
+          message: 'Sepete Eklendi',
+          type: 'success'
+        });
         const jsonValue = JSON.stringify([...itemToParse, product]);
         await AsyncStorage.setItem('cart', jsonValue);
+
         console.log('local storage is not available');
       } else {
+        showMessage({
+          message: 'Ürün Daha Önce Sepete Eklendi',
+          type: 'default'
+        });
+
         console.log('exist item', existItem);
       }
     } else {

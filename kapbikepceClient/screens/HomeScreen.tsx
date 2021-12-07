@@ -54,7 +54,7 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
           <SeacrhBarComp />
         </View>
         {/* <View>
-          <Text>{JSON.stringify(product, null, 4)}</Text>
+          <Text>{JSON.stringify(product, null>, 4)}</Text>
         </View> */}
         <ScrollView>
           <View style={styles.categoryCard}>

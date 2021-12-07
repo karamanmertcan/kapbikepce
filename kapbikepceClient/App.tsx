@@ -1,5 +1,6 @@
 import { Provider as PaperProvider } from 'react-native-paper';
 import React from 'react';
+import FlashMessage from 'react-native-flash-message';
 import StackScreen from './navigations/StackScreen';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,6 +12,7 @@ export default function App() {
     <>
       <SafeAreaProvider>
         <PaperProvider>
+          <FlashMessage position='top' statusBarHeight={'50'} autoHide={true} />
           <TabNavigation />
         </PaperProvider>
       </SafeAreaProvider>

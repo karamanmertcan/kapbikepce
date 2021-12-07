@@ -33,6 +33,7 @@ interface FakeStoreApi {
 
 const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props) => {
   const [product, setProducts] = React.useState<FakeStoreApi[]>([]);
+  const refRBSheet = React.useRef<any>();
 
   const windowHeight = useWindowDimensions().height;
   const navigation = useNavigation<any>();
@@ -133,10 +134,23 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
                   (3.5) - 1221 Yorum
                 </Text>
               </View>
-              <View>
-                <CommentBottomSheet />
+              <View style={styles.commentBox}>
+                <Text
+                  style={{
+                    marginRight: 10
+                  }}>
+                  Yorumlar
+                </Text>
+                <FontAwesome
+                  name='comments'
+                  size={24}
+                  color='black'
+                  onPress={() => refRBSheet.current.open()}
+                />
               </View>
-              <View></View>
+            </View>
+            <View>
+              <CommentBottomSheet refRBSheet={refRBSheet} />
             </View>
 
             <View
@@ -190,6 +204,10 @@ const styles = StyleSheet.create({
   restaurantHeader: {
     fontWeight: 'bold',
     fontSize: 28
+  },
+  commentBox: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 });
 

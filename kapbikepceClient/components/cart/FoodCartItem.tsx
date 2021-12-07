@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAtom } from 'jotai';
 import { removeFromCart, decreaseQty, increaseQty } from '../../store';
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 interface IFoodCartItemProps {
   item: {
@@ -24,67 +25,75 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
   const [_, setRemoveItem] = useAtom(removeFromCart);
   const [decreaseItemQty, setDecreaseItemQty] = useAtom(decreaseQty);
   const [increaseItemQty, setIncreaseItemQty] = useAtom(increaseQty);
+  const navigation = useNavigation<any>();
 
   return (
-    <View style={styles.cartItem}>
-      <View style={styles.cartItemLeft}>
-        <Image
-          style={{
-            height: 100,
-            width: '100%',
-            resizeMode: 'contain'
-          }}
-          source={{
-            uri: `${props.item.image}`
-          }}
-        />
-      </View>
-      <View style={styles.cartItemRight}>
-        <View
-          style={{
-            alignItems: 'flex-end'
-          }}>
-          <Entypo
-            name='trash'
-            size={24}
-            color='black'
-            onPress={() => {
-              setRemoveItem(props.item);
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('FoodDetailsScreen', {
+          itemId: props.item.id
+        });
+      }}>
+      <View style={styles.cartItem}>
+        <View style={styles.cartItemLeft}>
+          <Image
+            style={{
+              height: 100,
+              width: '100%',
+              resizeMode: 'contain'
+            }}
+            source={{
+              uri: `${props.item.image}`
             }}
           />
         </View>
-        <View>
-          <Text style={styles.cartItemRightText}>{props.item.title}</Text>
-          <Text style={styles.cartItemRightDesc}>{props.item.description?.slice(0, 20)}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}>
+        <View style={styles.cartItemRight}>
+          <View
+            style={{
+              alignItems: 'flex-end'
+            }}>
+            <Entypo
+              name='trash'
+              size={24}
+              color='black'
+              onPress={() => {
+                setRemoveItem(props.item);
+              }}
+            />
+          </View>
           <View>
-            <Text style={styles.cartItemRightText}>{props.item.price} TL</Text>
+            <Text style={styles.cartItemRightText}>{props.item.title}</Text>
+            <Text style={styles.cartItemRightDesc}>{props.item.description?.slice(0, 20)}</Text>
           </View>
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: 'space-between'
             }}>
-            <Button title='-' color='#ff4757' onPress={() => setDecreaseItemQty(props.item)} />
+            <View>
+              <Text style={styles.cartItemRightText}>{props.item.price} TL</Text>
+            </View>
             <View
               style={{
-                height: '100%',
-                alignItems: 'center',
-                padding: 10
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
               }}>
-              <Text>{props.item.quantity}</Text>
+              <Button title='-' color='#ff4757' onPress={() => setDecreaseItemQty(props.item)} />
+              <View
+                style={{
+                  height: '100%',
+                  alignItems: 'center',
+                  padding: 10
+                }}>
+                <Text>{props.item.quantity}</Text>
+              </View>
+              <Button title='+' color='#ff4757' onPress={() => setIncreaseItemQty(props.item)} />
             </View>
-            <Button title='+' color='#ff4757' onPress={() => setIncreaseItemQty(props.item)} />
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
