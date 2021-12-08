@@ -73,37 +73,6 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
               }}>
               {productData?.price} TL
             </Text>
-            {/* <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-              <Button
-                title='-'
-                color='#ff4757'
-                onPress={() => {
-                  //   setDecreaseItemQty(props.item)
-                  console.log('azalt');
-                }}
-              />
-              <View
-                style={{
-                  height: '100%',
-                  alignItems: 'center',
-                  padding: 10
-                }}>
-                <Text>1</Text>
-              </View>
-              <Button
-                title='+'
-                color='#ff4757'
-                onPress={() => {
-                  //   setIncreaseItemQty(props.item)
-                  console.log('arttir');
-                }}
-              />
-            </View> */}
           </View>
           <View style={styles.addToCartButton}>
             <Button
