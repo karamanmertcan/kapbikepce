@@ -6,7 +6,8 @@ import {
   useWindowDimensions,
   Image,
   Button,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -74,9 +75,20 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
         <View
           style={{
             flex: 4,
+            flexDirection: 'column',
             padding: 20
           }}>
-          <Text style={styles.restaurantHeader}>KapbiKepçe Restaurant</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+            <Text style={styles.restaurantHeader}>KapbiKepçe Restaurant</Text>
+            <View style={styles.rateBox}>
+              <Text>8.9</Text>
+            </View>
+          </View>
           <View
             style={{
               flex: 1
@@ -119,35 +131,17 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
                 justifyContent: 'space-between',
                 paddingTop: 10
               }}>
-              <View
-                style={{
-                  flexDirection: 'row'
-                }}>
-                <FontAwesome name='star' size={16} color='gold' />
-                <FontAwesome name='star' size={16} color='gold' />
-                <FontAwesome name='star' size={16} color='gold' />
-                <FontAwesome name='star-half-empty' size={16} color='gold' />
-                <Text
-                  style={{
-                    marginLeft: 10
-                  }}>
-                  (3.5) - 1221 Yorum
-                </Text>
-              </View>
-              <View style={styles.commentBox}>
-                <Text
-                  style={{
-                    marginRight: 10
-                  }}>
-                  Yorumlar
-                </Text>
-                <FontAwesome
-                  name='comments'
-                  size={24}
-                  color='black'
-                  onPress={() => refRBSheet.current.open()}
-                />
-              </View>
+              <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                <View style={styles.commentBox}>
+                  <Text
+                    style={{
+                      marginRight: 10
+                    }}>
+                    Yorumlar
+                  </Text>
+                  <FontAwesome name='comments' size={24} color='black' />
+                </View>
+              </TouchableOpacity>
             </View>
             <View>
               <CommentBottomSheet refRBSheet={refRBSheet} />
@@ -194,8 +188,16 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     position: 'absolute',
     zIndex: 100,
-    top: 0,
+    top: 100,
     left: 0
+  },
+  rateBox: {
+    height: 50,
+    width: 50,
+    borderRadius: 20,
+    backgroundColor: '#2ecc71',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   goBackButton: {
     position: 'absolute',

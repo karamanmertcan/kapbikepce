@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Entypo } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/core';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,12 +13,33 @@ import { useAtom } from 'jotai';
 
 interface ICartScreenProps {}
 
+const IsCartEmpty = () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: 'bold'
+        }}>
+        Kepçende Ürün Yok
+      </Text>
+      <View>
+        <Entypo name='emoji-sad' size={44} color='black' />
+      </View>
+    </View>
+  );
+};
+
 const CartScreen: React.FunctionComponent<ICartScreenProps> = (props) => {
   const [storageItem, setStorageIte] = useAtom(storageItems);
   const [storeItems, setStoreItems] = useAtom(getItemsFromStorage);
   const route = useRoute();
   const isFocused = useIsFocused();
-  console.log(route.name);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -31,13 +53,17 @@ const CartScreen: React.FunctionComponent<ICartScreenProps> = (props) => {
         <View style={styles.titleContainer}>
           <Text style={styles.pageTitle}>Kepçem</Text>
         </View>
-        <View style={styles.foodCartContainer}>
-          <ScrollView>
-            {storageItem &&
-              storageItem.length > 0 &&
-              storageItem.map((item: any) => <FoodCartItem key={item.id} item={item} />)}
-          </ScrollView>
-        </View>
+        {storageItem.length > 0 ? (
+          <View style={styles.foodCartContainer}>
+            <ScrollView>
+              {storageItem &&
+                storageItem.length > 0 &&
+                storageItem.map((item: any) => <FoodCartItem key={item.id} item={item} />)}
+            </ScrollView>
+          </View>
+        ) : (
+          <IsCartEmpty />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -58,7 +84,7 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontWeight: 'bold',
-    fontSize: 25
+    fontSize: 26
   },
   headerContainer: {}
 });

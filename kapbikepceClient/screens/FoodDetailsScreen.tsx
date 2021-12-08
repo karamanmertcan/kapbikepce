@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { decreaseQty, increaseQty, addItemToCart } from '../store';
@@ -46,9 +47,9 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
   }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
-      <ScrollView>
-        <View style={styles.container}>
-          <Header />
+      <View style={styles.container}>
+        <Header />
+        <ScrollView>
           <View style={styles.imageContainer}>
             <Image
               style={{ width: '100%', height: 200 }}
@@ -72,7 +73,7 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
               }}>
               {productData?.price} TL
             </Text>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -102,13 +103,22 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
                   console.log('arttir');
                 }}
               />
-            </View>
+            </View> */}
           </View>
           <View style={styles.addToCartButton}>
-            <Button title='Kepçele' onPress={() => setAddToCart(productData)} color='#ff4757' />
+            <Button
+              mode='contained'
+              color='#ff4757'
+              onPress={() => setAddToCart(productData)}
+              style={{
+                width: '100%',
+                height: '100%'
+              }}>
+              Kepçele
+            </Button>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -116,11 +126,10 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingBottom: 100
+    backgroundColor: '#fff'
   },
   imageContainer: {
-    marginTop: '15%',
+    marginTop: '20%',
     width: '100%',
     height: 200
   },
@@ -143,13 +152,17 @@ const styles = StyleSheet.create({
   },
   priceAndButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '90%',
     margin: '5%'
   },
   addToCartButton: {
-    width: '80%',
-    margin: '10%'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    marginHorizontal: '25%',
+    borderRadius: 10
   }
 });
 

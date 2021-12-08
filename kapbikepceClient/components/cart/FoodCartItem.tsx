@@ -79,7 +79,14 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}>
-              <Button title='-' color='#ff4757' onPress={() => setDecreaseItemQty(props.item)} />
+              <View
+                style={{
+                  width: 25,
+                  backgroundColor: '#ff4757',
+                  borderRadius: 10
+                }}>
+                <Button title='-' color='#fff' onPress={() => setDecreaseItemQty(props.item)} />
+              </View>
               <View
                 style={{
                   height: '100%',
@@ -88,7 +95,14 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                 }}>
                 <Text>{props.item.quantity}</Text>
               </View>
-              <Button title='+' color='#ff4757' onPress={() => setIncreaseItemQty(props.item)} />
+              <View
+                style={{
+                  width: 25,
+                  backgroundColor: '#ff4757',
+                  borderRadius: 10
+                }}>
+                <Button title='+' color='#fff' onPress={() => setIncreaseItemQty(props.item)} />
+              </View>
             </View>
           </View>
         </View>

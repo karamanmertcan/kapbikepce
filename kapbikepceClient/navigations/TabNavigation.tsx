@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons, Entypo } from '@expo/vector-icons';
+import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import StackScreen from '../navigations/StackScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import RestaurantScreen from '../screens/RestaurantScreen';
 import CartScreen from '../screens/CartScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +39,14 @@ export default function TabNavigation() {
             tabBarIcon: ({ size, color }) => (
               <Entypo name='shopping-basket' size={24} color='white' />
             )
+          }}
+        />
+        <Tab.Screen
+          name='Hesabım'
+          component={ProfileScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ size, color }) => <AntDesign name='user' size={24} color='white' />
           }}
         />
       </Tab.Navigator>

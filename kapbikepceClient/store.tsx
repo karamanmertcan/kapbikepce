@@ -14,7 +14,7 @@ export const addItemToCart = atom(
     if (getItemsFromLocal !== null && itemToParse.length >= 1) {
       const existItem = itemToParse.find((item: any) => item.id === product.id);
 
-      console.log('existItem', existItem);
+      // console.log('existItem', existItem);
 
       if (!existItem) {
         console.log('selam sepet');
@@ -25,16 +25,21 @@ export const addItemToCart = atom(
         const jsonValue = JSON.stringify([...itemToParse, product]);
         await AsyncStorage.setItem('cart', jsonValue);
 
-        console.log('local storage is not available');
+        // console.log('local storage is not available');
       } else {
         showMessage({
           message: 'Ürün Daha Önce Sepete Eklendi',
           type: 'default'
         });
 
-        console.log('exist item', existItem);
+        // console.log('exist item', existItem);
       }
     } else {
+      // console.log('selam sepet else');
+      showMessage({
+        message: 'Sepete Eklendi',
+        type: 'success'
+      });
       const newCartItems = [product];
       console.log('newCartItems', newCartItems);
 
@@ -61,9 +66,9 @@ export const getItemsFromStorage = atom(
   async (get, set) => {
     const value = await AsyncStorage.getItem('cart');
     const bakeToJson = JSON.parse(value || '{}');
-    console.log(bakeToJson);
+    // console.log(bakeToJson);
     set(storageItems, bakeToJson);
-    console.log('baketojson =>', bakeToJson);
+    // console.log('baketojson =>', bakeToJson);
   }
 );
 

@@ -46,9 +46,15 @@ const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (p
             <Text>{props.product.description.slice(0, 20)}...</Text>
             <View style={styles.addToCartContainer}>
               <Text>{props.product.price} TL</Text>
-              <Button mode='contained' onPress={() => setAddItem(props.product)} color='#ff4757'>
-                +
-              </Button>
+              <View
+                style={{
+                  width: 30
+                  // marginRight: 50
+                }}>
+                <Button mode='contained' onPress={() => setAddItem(props.product)} color='#ff4757'>
+                  +
+                </Button>
+              </View>
             </View>
           </View>
         </View>
@@ -70,7 +76,8 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    flex: 1
+    flex: 1,
+    width: '90%'
   },
   foodImage: {
     height: 100,

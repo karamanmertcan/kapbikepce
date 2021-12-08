@@ -44,7 +44,7 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
               fontWeight: 'bold',
               fontSize: 25
             }}>
-            Kap Bi Kepçe
+            Kap Bir Kepçe
           </Text>
         </View>
         <View
