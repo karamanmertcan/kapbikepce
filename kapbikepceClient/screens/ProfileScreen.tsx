@@ -10,12 +10,14 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import UserAvatar from 'react-native-user-avatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import Header from '../components/Header';
 import LastOrderCard from '../components/orderCard/LastOrderCard';
-import { Entypo } from '@expo/vector-icons';
+import UserInfoBottomSheet from '../components/userInfo/UserInfoBottomSheet';
+import OldOrdersBottomSheet from '../components/userInfo/OldOrdersBottomSheet';
 
 interface IProfileScreenProps {}
 
@@ -62,6 +64,11 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
 
   const [orders, setOrders] = useState<FakeStoreApi[]>([]);
 
+  const isFocused = useIsFocused();
+
+  const refRBSheet = React.useRef<any>();
+  const oldOrdersRefRBSheet = React.useRef<any>();
+
   const getProductsFromApi = async () => {
     const data = await fetch('https://fakestoreapi.com/products');
     const res = await data.json();
@@ -69,8 +76,10 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
   };
 
   React.useEffect(() => {
-    getProductsFromApi();
-  }, []);
+    if (isFocused) {
+      getProductsFromApi();
+    }
+  }, [props, isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -82,42 +91,55 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
             <Text style={styles.username}>Mertcan Karaman</Text>
           </View>
           <View style={styles.userInfos}>
-            <View style={styles.addressContainer}>
-              <Text style={styles.addressTitle}>Adresim</Text>
-              <TextInput
-                multiline={true}
-                numberOfLines={4}
-                onFocus={() => setIsTextArea(!isTextArea)}
-                placeholder='Adresinizi giriniz'
-                style={{
-                  minHeight: 50,
-                  textAlignVertical: 'top',
-                  borderColor: 'grey',
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  padding: 10
-                }}
-                onChangeText={(text) => setAddress(text)}
-                value={address}
-              />
+            <View
+              style={{
+                flex: 1,
+                minHeight: 100,
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}>
+              <View>
+                <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}>
+                    <AntDesign name='user' size={24} color='black' />
+                    <Text
+                      style={{
+                        marginLeft: 10
+                      }}>
+                      Kullanıcı Bilgileri
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => oldOrdersRefRBSheet.current.open()}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}>
+                    <MaterialCommunityIcons name='page-previous-outline' size={24} color='black' />
+                    <Text
+                      style={{
+                        marginLeft: 10
+                      }}>
+                      Siparişlerim
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.lastOrders}>
-              <Text style={styles.lastOrdersTitle}>Son Siparislerim</Text>
 
-              <ScrollView>
-                {orders && orders.length > 0 ? (
-                  orders.splice(0, 3).map((order) => <LastOrderCard key={order.id} order={order} />)
-                ) : (
-                  <IsCartEmpty />
-                )}
-              </ScrollView>
-            </View>
             <View style={styles.accountSettings}>
               <TouchableOpacity>
                 <View style={styles.accountSettingsCards}>
-                  <View>
-                    <MaterialIcons name='logout' size={28} color='black' />
-                  </View>
+                  <MaterialIcons name='logout' size={28} color='black' />
                   <Text
                     style={{
                       fontSize: 14,
@@ -131,9 +153,7 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
               </TouchableOpacity>
               <TouchableOpacity>
                 <View style={styles.accountSettingsCards}>
-                  <View>
-                    <MaterialCommunityIcons name='key-change' size={24} color='black' />
-                  </View>
+                  <MaterialCommunityIcons name='key-change' size={24} color='black' />
                   <Text
                     style={{
                       fontSize: 14,
@@ -146,6 +166,15 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
                 </View>
               </TouchableOpacity>
             </View>
+            <View>
+              <UserInfoBottomSheet refRBSheet={refRBSheet} />
+            </View>
+            <View>
+              <OldOrdersBottomSheet
+                oldOrdersRefRBSheet={oldOrdersRefRBSheet}
+                orders={orders.slice(0, 3)}
+              />
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -156,7 +185,8 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    height: '100%'
   },
   userAvatar: {
     flex: 1,
@@ -182,22 +212,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  lastOrders: {
-    flex: 3,
-    marginTop: 50,
-    minHeight: 200
-  },
+
   lastOrdersTitle: {
     fontSize: 20,
     fontWeight: 'bold'
   },
   accountSettings: {
-    flex: 2,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flex: 4,
+    minHeight: 150,
     flexDirection: 'row',
-    marginTop: 50,
-    minHeight: 150
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   accountSettingsCards: {
     width: 100,

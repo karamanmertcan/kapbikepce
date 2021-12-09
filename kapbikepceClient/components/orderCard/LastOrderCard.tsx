@@ -37,7 +37,7 @@ const LastOrderCard: React.FunctionComponent<ILastOrderCardProps> = (props) => {
         </View>
         <View style={styles.foodCardRight}>
           <Text style={styles.foodTitle}>{props.order.title}</Text>
-          <Text>{props.order.description.slice(0, 20)}...</Text>
+          <Text>{props.order?.description?.slice(0, 20)}...</Text>
         </View>
       </View>
     </View>

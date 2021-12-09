@@ -6,13 +6,23 @@ import RestaurantCard from '../components/ResteurantCard';
 import SeacrhBarComp from '../components/SearchBar';
 import * as Location from 'expo-location';
 import axios from 'axios';
+import HomeScreenCarousel from '../components/HomeScreenCarousel';
 
 interface IHomeScreenProps {}
 
 const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [searchBarText, setSearchBarText] = useState<any>(``);
+  const [searchProducts, setSearchProducts] = useState<any>([]);
   const windowHeight = useWindowDimensions().height;
+
+  const getProductsFromSearchBar = async (text: string) => {
+    const res = await fetch(`'https://fakestoreapi.com/products/category/${text}'`);
+    const data = await res.json();
+    console.log(data);
+    setSearchProducts(data);
+  };
 
   useEffect(() => {
     // (async () => {
@@ -51,20 +61,25 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
           style={{
             marginTop: '5%'
           }}>
-          <SeacrhBarComp />
+          <SeacrhBarComp
+            getProductsFromSearchBar={getProductsFromSearchBar}
+            searchBarText={searchBarText}
+            setSearchBarText={setSearchBarText}
+          />
         </View>
         {/* <View>
           <Text>{JSON.stringify(product, null>, 4)}</Text>
         </View> */}
         <ScrollView>
           <View style={styles.categoryCard}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <CategoryCard />
               <CategoryCard />
               <CategoryCard />
               <CategoryCard />
               <CategoryCard />
-            </ScrollView>
+            </ScrollView> */}
+            <HomeScreenCarousel />
           </View>
           <View
             style={{

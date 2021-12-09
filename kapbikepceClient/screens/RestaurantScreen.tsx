@@ -7,12 +7,13 @@ import {
   Image,
   Button,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/core';
-
+import { useIsFocused } from '@react-navigation/native';
 import Header from '../components/Header';
 import RestaurantFoodCard from '../components/RestaurantFoodCard';
 import CommentBottomSheet from '../components/comments/CommentBottomSheet';
@@ -32,24 +33,49 @@ interface FakeStoreApi {
   };
 }
 
+const IsCartEmpty = () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+      <ActivityIndicator size='small' color='#0000ff' />
+    </View>
+  );
+};
+
 const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props) => {
   const [product, setProducts] = React.useState<FakeStoreApi[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
   const refRBSheet = React.useRef<any>();
 
   const windowHeight = useWindowDimensions().height;
   const navigation = useNavigation<any>();
   const route = useRoute();
+  const isFocused = useIsFocused();
+
   console.log(route.name);
 
   const getProductsFromApi = async () => {
-    const data = await fetch('https://fakestoreapi.com/products');
-    const res = await data.json();
-    setProducts(res);
+    try {
+      setIsLoading(true);
+      const data = await fetch('https://fakestoreapi.com/products');
+      const res = await data.json();
+      setProducts(res);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   React.useEffect(() => {
-    getProductsFromApi();
-  }, []);
+    if (isFocused) {
+      getProductsFromApi();
+    }
+  }, [props, isFocused]);
 
   const sheetRef = React.useRef<any>(null);
 
