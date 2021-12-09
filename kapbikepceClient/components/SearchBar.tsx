@@ -10,10 +10,17 @@ interface ISeacrhBarProps {
 const SeacrhBarComp: React.FunctionComponent<ISeacrhBarProps> = (props) => {
   const [searchQuery, setSearchQuery] = React.useState<any>('');
 
-  const onChangeSearch = async (query: string) => setSearchQuery(query);
+  const onChangeSearch = async (query: string) => {
+    setSearchQuery(query);
+    // console.log(searchQuery);
+    // const res = await fetch(`https://fakestoreapi.com/products/category/${searchQuery}`);
+    // const data = await res.json();
+    // console.log(data);
+  };
 
   const getProducts = async () => {
-    const res = await fetch(`'https://fakestoreapi.com/products/category/${searchQuery}'`);
+    console.log(searchQuery);
+    const res = await fetch(`https://fakestoreapi.com/products/category/${searchQuery}`);
     const data = await res.json();
     console.log(data);
   };
