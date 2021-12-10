@@ -65,7 +65,8 @@ const UserInfos: React.FunctionComponent<IUserInfosProps> = (props) => {
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    padding: 20
+    padding: 20,
+    paddingBottom: 100
   },
   formTitle: {
     fontSize: 24,
