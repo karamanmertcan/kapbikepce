@@ -1,17 +1,20 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
-
+import { useAtom } from 'jotai';
+import { userState } from '../../store';
 interface IUserInfosProps {}
 
 const UserInfos: React.FunctionComponent<IUserInfosProps> = (props) => {
+  const [user, setUser] = useAtom(userState);
   const [userForm, setUserForm] = React.useState({
-    email: 'mertcankaraman2000@gmail.com',
-    name: '',
-    surname: '',
-    address: '',
+    email: user?.user?.email,
+    name: user?.user?.name,
+    surname: user?.user?.lastName,
+    address: user?.user?.address,
     phoneNumber: ''
   });
+
   return (
     <View style={styles.formContainer}>
       <Text style={styles.formTitle}>Kullanıcı Bilgilerim</Text>

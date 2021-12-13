@@ -1,74 +1,52 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAtom } from 'jotai';
 import HomeScreen from '../screens/HomeScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import TabNavigation from '../navigations/TabNavigation';
 import RestaurantScreen from '../screens/RestaurantScreen';
-import { Button } from 'react-native';
+import { isAuthenticated } from '../store';
 import FoodDetailsScreen from '../screens/FoodDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
 function StackScreen() {
+  const [isAuthenticatedState] = useAtom(isAuthenticated);
   return (
-    <Stack.Navigator>
-      {/* <Stack.Screen
-          name='Login'
-          component={LoginScreen}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name='Register'
-          component={RegisterScreen}
-          options={{
-            headerShown: false
-          }}
-        /> */}
-      {/* <Stack.Screen
-          name='Intro'
-          component={IntroSlider}
-          options={{
-            headerShown: false
-          }}
-        /> */}
-      {/* <Stack.Screen
-        name='TabBar'
-        component={TabNavigation}
-        options={{
-          headerShown: false
-          // headerStyle: {
-          //   backgroundColor: '#ff4757'
-          // },
-          // headerTitleAlign: 'center'
-        }}
-      /> */}
-      <Stack.Screen
-        name='Home'
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-          title: 'Kap Bi Kepçe'
-        }}
-      />
-      <Stack.Screen
-        name='RestaurantDetails'
-        component={RestaurantScreen}
-        options={{
-          headerShown: false,
-          title: 'Kap Bi Kepçe'
-        }}
-      />
-      <Stack.Screen
-        name='FoodDetailsScreen'
-        component={FoodDetailsScreen}
-        options={{
-          headerShown: false,
-          title: 'Kap Bi Kepçe'
-        }}
-      />
-    </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {isAuthenticatedState ? (
+          <>
+            <Stack.Screen
+              name='Tab'
+              component={TabNavigation}
+              options={{
+                headerShown: false
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name='Login'
+              component={LoginScreen}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name='Register'
+              component={RegisterScreen}
+              options={{
+                headerShown: false
+              }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

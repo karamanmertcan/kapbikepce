@@ -3,23 +3,26 @@ import {
   View,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import UserAvatar from 'react-native-user-avatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import Header from '../components/Header';
-import LastOrderCard from '../components/orderCard/LastOrderCard';
 import UserInfoBottomSheet from '../components/userInfo/UserInfoBottomSheet';
 import OldOrdersBottomSheet from '../components/userInfo/OldOrdersBottomSheet';
+import { useAtom } from 'jotai';
+import { userState, logoutUser, getUserFromStorage } from '../store';
 
-interface IProfileScreenProps {}
+interface IProfileScreenProps {
+  user: {
+    name: string;
+    lastName: string;
+  };
+}
 
 interface FakeStoreApi {
   id: number;
@@ -57,6 +60,9 @@ const IsCartEmpty = () => {
 };
 
 const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
+  const [user, setUser] = useAtom(userState);
+  const [getUser, setGetUser] = useAtom(getUserFromStorage);
+  const [, setLogoutUser] = useAtom(logoutUser);
   const [address, setAddress] = useState(
     'Örnek köy mahalle şirindere caddesi no;1 Beykoz İstanbul'
   );
@@ -77,7 +83,8 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
 
   React.useEffect(() => {
     if (isFocused) {
-      getProductsFromApi();
+      setGetUser();
+      console.log('isFocused', getUser);
     }
   }, [props, isFocused]);
 
@@ -87,8 +94,11 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
         <Header />
         <ScrollView>
           <View style={styles.userAvatar}>
-            <UserAvatar size={100} name='Mertcan Karaman' />
-            <Text style={styles.username}>Mertcan Karaman</Text>
+            <UserAvatar size={100} name={user?.name} />
+            <Text style={styles.username}>
+              {user?.name}
+              {user?.lastName}
+            </Text>
           </View>
           <View style={styles.userInfos}>
             <View
@@ -137,7 +147,7 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
             </View>
 
             <View style={styles.accountSettings}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setLogoutUser()}>
                 <View style={styles.accountSettingsCards}>
                   <MaterialIcons name='logout' size={28} color='black' />
                   <Text

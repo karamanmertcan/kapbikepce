@@ -1,8 +1,67 @@
 import { atom } from 'jotai';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 
+interface UserState {}
+
 export const storageItems = atom([]);
+export const isAuthenticated = atom(false);
+export const userState = atom({});
+
+export const getTokenAndUserFromStorage = atom(
+  () => '',
+  async (get, set) => {
+    try {
+      const token: any = await AsyncStorage.getItem('token');
+      const user: any = await AsyncStorage.getItem('user');
+
+      const bakeToJsonUser = user && JSON.parse(user);
+      const bakeToJsonToken = token && JSON.parse(token);
+
+      if (bakeToJsonToken && bakeToJsonUser) {
+        set(isAuthenticated, true);
+        set(userState, bakeToJsonUser);
+      } else {
+        set(isAuthenticated, false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const getUserFromStorage = atom(
+  () => '',
+  async (get, set) => {
+    try {
+      const user: any = await AsyncStorage.getItem('user');
+
+      const bakeToJsonUser = user && JSON.parse(user);
+
+      if (bakeToJsonUser) {
+        set(userState, bakeToJsonUser);
+        console.log('user from storage', bakeToJsonUser);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const logoutUser = atom(
+  () => '',
+  async (get, set) => {
+    try {
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('user');
+      set(isAuthenticated, false);
+      set(userState, {});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 export const addItemToCart = atom(
   () => '',

@@ -1,7 +1,10 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { showMessage, hideMessage } from 'react-native-flash-message';
 import { TextInput, Button } from 'react-native-paper';
 import AuthForm from '../components/AuthForm';
 import RegisterForm from '../components/RegisterForm';
@@ -14,9 +17,48 @@ interface IRegisterProps {
 
 const Register: React.FunctionComponent<IRegisterProps> = (props) => {
   const navigation = useNavigation<any>();
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
+
+  const onSubmit = async (input: any) => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(input.email) === false) {
+      showMessage({
+        message: 'Dogru bir email adresi giriniz',
+        type: 'danger'
+      });
+    } else {
+      try {
+        const { data } = await axios.post('http://192.168.1.6:8000/api/register', {
+          name: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          password: input.password,
+          address: input.address
+        });
+
+        if (data.ok) {
+          showMessage({
+            message: 'Kayit basariyla tamamlandi',
+            type: 'success'
+          });
+          navigation.navigate('Login');
+        }
+
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+        showMessage({
+          message: 'Kayit basarisiz',
+          type: 'danger'
+        });
+      }
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -27,25 +69,13 @@ const Register: React.FunctionComponent<IRegisterProps> = (props) => {
           <KeyboardAwareScrollView>
             <View style={styles.formContainer}>
               <RegisterForm
-                email={email}
-                password={password}
-                name={name}
-                setName={setName}
-                setPassword={setPassword}
-                setEmail={setEmail}
                 page='register'
+                control={control}
+                handleSubmit={handleSubmit}
+                onSubmit={onSubmit}
+                errors={errors}
               />
-              <Button
-                mode='contained'
-                onPress={() => console.log('Pressed')}
-                style={{
-                  marginTop: '10%',
-                  backgroundColor: '#ff4757',
-                  padding: 5,
-                  borderRadius: 20
-                }}>
-                Uye Ol
-              </Button>
+
               <Text
                 onPress={() => navigation.navigate('Login')}
                 style={{
