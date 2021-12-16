@@ -81,12 +81,11 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
     setOrders(res);
   };
 
-  React.useEffect(() => {
-    if (isFocused) {
-      setGetUser();
-      console.log('isFocused', getUser);
-    }
-  }, [props, isFocused]);
+  // React.useEffect(() => {
+  //   if (isFocused) {
+  //     setGetUser();
+  //   }
+  // }, [props, isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -94,10 +93,24 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
         <Header />
         <ScrollView>
           <View style={styles.userAvatar}>
-            <UserAvatar size={100} name={user?.name} />
+            <View
+              style={{
+                flex: 1,
+                minHeight: 130,
+                width: 130,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#f2f',
+                borderRadius: 200
+              }}>
+              <Text style={styles.avatarName}>{user?.user?.name?.charAt(0).toUpperCase()}</Text>
+              <Text style={styles.avatarName}>{user?.user?.lastName?.charAt(0).toUpperCase()}</Text>
+            </View>
             <Text style={styles.username}>
-              {user?.name}
-              {user?.lastName}
+              {user?.user?.name}
+              {user?.user?.lastName}
             </Text>
           </View>
           <View style={styles.userInfos}>
@@ -205,6 +218,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 200,
     paddingTop: 100
+  },
+  avatarName: {
+    fontSize: 40
   },
   userInfos: {
     flex: 5,

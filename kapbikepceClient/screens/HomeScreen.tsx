@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, useWindowDimensions, StatusBar } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  useWindowDimensions,
+  StatusBar,
+  Image
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryCard from '../components/CategoryCard';
 import RestaurantCard from '../components/ResteurantCard';
@@ -7,34 +15,30 @@ import SeacrhBarComp from '../components/SearchBar';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import HomeScreenCarousel from '../components/HomeScreenCarousel';
+import { useAtom } from 'jotai';
+import { userState, getTokenAndUserFromStorage } from '../store';
 
 interface IHomeScreenProps {}
 
 const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [userToken, setUserToken] = useAtom(userState);
+  const [restaurants, setRestaurants] = useState<any>([]);
   const [searchBarText, setSearchBarText] = useState<any>(``);
-  const [searchProducts, setSearchProducts] = useState<any>([]);
   const windowHeight = useWindowDimensions().height;
 
-  const getProductsFromSearchBar = async (text: string) => {
-    const res = await fetch(`'https://fakestoreapi.com/products/category/${text}'`);
-    const data = await res.json();
-    console.log(data);
-    setSearchProducts(data);
-  };
+  console.log(userToken);
 
-  useEffect(() => {
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //   }
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   setLocation(location);
-    // })();
-  }, []);
+  const getRestaurants = async () => {
+    const { data } = await axios.get('http://192.168.1.2:8000/api/get-restaurants', {
+      headers: {
+        Authorization: `Bearer ${userToken.token}`
+      }
+    });
+    console.log(data);
+    setRestaurants(data);
+  };
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -44,6 +48,10 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
     text = JSON.stringify(location);
     console.log(text);
   }
+
+  useEffect(() => {
+    getRestaurants();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -61,24 +69,13 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
           style={{
             marginTop: '5%'
           }}>
-          <SeacrhBarComp
-            getProductsFromSearchBar={getProductsFromSearchBar}
-            searchBarText={searchBarText}
-            setSearchBarText={setSearchBarText}
-          />
+          <SeacrhBarComp searchBarText={searchBarText} setSearchBarText={setSearchBarText} />
         </View>
         {/* <View>
           <Text>{JSON.stringify(product, null>, 4)}</Text>
         </View> */}
         <ScrollView>
           <View style={styles.categoryCard}>
-            {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <CategoryCard />
-              <CategoryCard />
-              <CategoryCard />
-              <CategoryCard />
-              <CategoryCard />
-            </ScrollView> */}
             <HomeScreenCarousel />
           </View>
           <View
@@ -88,8 +85,11 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
               paddingBottom: 300
             }}>
             <Text style={styles.restaurantHeader}>Restaurantlar</Text>
-            <RestaurantCard />
-            <RestaurantCard />
+            {restaurants &&
+              restaurants.length > 0 &&
+              restaurants.map((restaurant: any) => (
+                <RestaurantCard restaurant={restaurant} key={restaurant._id} />
+              ))}
           </View>
         </ScrollView>
       </View>

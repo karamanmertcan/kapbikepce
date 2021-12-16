@@ -6,17 +6,14 @@ import { addItemToCart } from '../store';
 import { useNavigation } from '@react-navigation/native';
 
 interface IRestaurantFoodCardProps {
-  product: {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    category: string;
-    image: string;
-    rating: {
-      rate: number;
-      count: number;
+  food: {
+    restaurantName: string;
+    image: {
+      url: string;
     };
+    items: Array<any>;
+    rating: Array<any>;
+    _id: string;
   };
 }
 
@@ -27,7 +24,7 @@ const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (p
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('FoodDetailsScreen', {
-          itemId: props.product.id
+          itemId: props.food.id
         });
       }}>
       <View style={[styles.restaurantFoodCard]}>
@@ -36,22 +33,22 @@ const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (p
             <Image
               style={styles.foodImage}
               source={{
-                uri: `${props.product.image}`
+                uri: `${props.food.image.url}`
               }}
               resizeMode='contain'
             />
           </View>
           <View style={styles.foodCardRight}>
-            <Text style={styles.foodTitle}>{props.product.title}</Text>
-            <Text>{props.product.description.slice(0, 20)}...</Text>
+            <Text style={styles.foodTitle}>{props.food.text}</Text>
+            <Text>{props.food.description}...</Text>
             <View style={styles.addToCartContainer}>
-              <Text>{props.product.price} TL</Text>
+              <Text>{props.food.price} TL</Text>
               <View
                 style={{
                   width: 30
                   // marginRight: 50
                 }}>
-                <Button mode='contained' onPress={() => setAddItem(props.product)} color='#ff4757'>
+                <Button mode='contained' onPress={() => setAddItem(props.food)} color='#ff4757'>
                   +
                 </Button>
               </View>

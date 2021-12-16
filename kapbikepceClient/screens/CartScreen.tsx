@@ -58,7 +58,7 @@ const CartScreen: React.FunctionComponent<ICartScreenProps> = (props) => {
             <ScrollView>
               {storageItem &&
                 storageItem.length > 0 &&
-                storageItem.map((item: any) => <FoodCartItem key={item.id} item={item} />)}
+                storageItem.map((item: any) => <FoodCartItem key={item._id} item={item} />)}
             </ScrollView>
           </View>
         ) : (

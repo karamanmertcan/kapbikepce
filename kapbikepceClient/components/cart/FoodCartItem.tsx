@@ -43,7 +43,7 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
               resizeMode: 'contain'
             }}
             source={{
-              uri: `${props.item.image}`
+              uri: `${props.item.image.url}`
             }}
           />
         </View>
@@ -62,7 +62,7 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
             />
           </View>
           <View>
-            <Text style={styles.cartItemRightText}>{props.item.title}</Text>
+            <Text style={styles.cartItemRightText}>{props.item.text}</Text>
             <Text style={styles.cartItemRightDesc}>{props.item.description?.slice(0, 20)}</Text>
           </View>
           <View

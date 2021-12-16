@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
+import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/core';
@@ -17,6 +18,8 @@ import { useIsFocused } from '@react-navigation/native';
 import Header from '../components/Header';
 import RestaurantFoodCard from '../components/RestaurantFoodCard';
 import CommentBottomSheet from '../components/comments/CommentBottomSheet';
+import { useAtom } from 'jotai';
+import { userState } from '../store';
 
 interface IRestaurantScreenProps {}
 
@@ -47,23 +50,31 @@ const IsCartEmpty = () => {
 };
 
 const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props) => {
-  const [product, setProducts] = React.useState<FakeStoreApi[]>([]);
+  const [restaurantData, setRestaurantData] = React.useState<any>([]);
+  const [userToken, setUserToken] = useAtom(userState);
   const [isLoading, setIsLoading] = React.useState(false);
   const refRBSheet = React.useRef<any>();
 
   const windowHeight = useWindowDimensions().height;
   const navigation = useNavigation<any>();
-  const route = useRoute();
+  const route = useRoute<any>();
   const isFocused = useIsFocused();
 
-  console.log(route.name);
+  const { restaurantId } = route.params;
 
   const getProductsFromApi = async () => {
     try {
       setIsLoading(true);
-      const data = await fetch('https://fakestoreapi.com/products');
-      const res = await data.json();
-      setProducts(res);
+      const { data } = await axios.get(
+        `http://192.168.1.2:8000/api/get-restaurant/${restaurantId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken.token}`
+          }
+        }
+      );
+      console.log('restaurant data', data);
+      setRestaurantData(data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -93,7 +104,7 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
             }}
             resizeMode='cover'
             source={{
-              uri: 'https://i.imgur.com/2ZZfFQb.jpeg'
+              uri: `${restaurantData.image?.url}`
             }}
           />
         </View>
@@ -110,9 +121,9 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-            <Text style={styles.restaurantHeader}>KapbiKepçe Restaurant</Text>
+            <Text style={styles.restaurantHeader}>{restaurantData.restaurantName}</Text>
             <View style={styles.rateBox}>
-              <Text>8.9</Text>
+              <Text>5</Text>
             </View>
           </View>
           <View
@@ -184,9 +195,10 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
                 paddingTop: 10
               }}>
               <ScrollView>
-                {product &&
-                  product.map((product) => (
-                    <RestaurantFoodCard key={product.id} product={product} />
+                {restaurantData &&
+                  restaurantData.items &&
+                  restaurantData.items.map((food: any) => (
+                    <RestaurantFoodCard key={food._id} food={food} />
                   ))}
               </ScrollView>
             </View>

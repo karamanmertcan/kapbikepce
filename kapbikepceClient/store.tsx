@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import { useEffect } from 'react';
 
 interface UserState {}
 
@@ -21,7 +22,10 @@ export const getTokenAndUserFromStorage = atom(
 
       if (bakeToJsonToken && bakeToJsonUser) {
         set(isAuthenticated, true);
-        set(userState, bakeToJsonUser);
+        set(userState, {
+          user: bakeToJsonUser,
+          token: bakeToJsonToken
+        });
       } else {
         set(isAuthenticated, false);
       }
@@ -41,7 +45,7 @@ export const getUserFromStorage = atom(
 
       if (bakeToJsonUser) {
         set(userState, bakeToJsonUser);
-        console.log('user from storage', bakeToJsonUser);
+        // console.log('user from storage', bakeToJsonUser);
       }
     } catch (error) {
       console.log(error);

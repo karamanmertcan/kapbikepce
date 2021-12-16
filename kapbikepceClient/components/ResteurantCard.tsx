@@ -2,33 +2,51 @@ import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-interface IRestaurantCardProps {}
+interface IRestaurantCardProps {
+  restaurant: {
+    restaurantName: string;
+    image: {
+      url: string;
+    };
+    items: Array<any>;
+    rating: Array<any>;
+    _id: string;
+  };
+}
 
 const RestaurantCard: React.FunctionComponent<IRestaurantCardProps> = (props) => {
   const navigation = useNavigation<any>();
+  const { restaurant } = props;
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('RestaurantDetails');
+        navigation.navigate('RestaurantDetails', {
+          restaurantId: restaurant._id
+        });
       }}>
       <View style={styles.restaurantCard}>
         <View style={styles.restaurantContainer}>
-          <Image
+          <View
             style={{
-              height: 60,
-              width: 60,
-              resizeMode: 'contain'
-            }}
-            source={{
-              uri: 'https://freesvg.org/img/Pizza_Pepperoni.png'
-            }}
-          />
+              width: 100,
+              height: 100
+            }}>
+            <Image
+              style={{
+                height: '100%'
+              }}
+              resizeMode='cover'
+              source={{
+                uri: `${restaurant.image.url}`
+              }}
+            />
+          </View>
           <View
             style={{
               flexDirection: 'row'
             }}>
             <View style={styles.rateBox}>
-              <Text>8.9</Text>
+              <Text>5</Text>
             </View>
             <View style={styles.addressBox}>
               <Text
@@ -36,7 +54,7 @@ const RestaurantCard: React.FunctionComponent<IRestaurantCardProps> = (props) =>
                   marginLeft: 10,
                   fontWeight: 'bold'
                 }}>
-                Kapbikepçeci
+                {restaurant.restaurantName}
               </Text>
               <Text
                 style={{
