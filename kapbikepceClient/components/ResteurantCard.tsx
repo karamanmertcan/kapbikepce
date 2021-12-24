@@ -11,6 +11,9 @@ interface IRestaurantCardProps {
     items: Array<any>;
     rating: Array<any>;
     _id: string;
+    restaurantOwner: {
+      _id: string;
+    };
   };
 }
 
@@ -21,7 +24,7 @@ const RestaurantCard: React.FunctionComponent<IRestaurantCardProps> = (props) =>
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('RestaurantDetails', {
-          restaurantId: restaurant._id
+          restaurantId: restaurant.restaurantOwner._id
         });
       }}>
       <View style={styles.restaurantCard}>
@@ -29,11 +32,13 @@ const RestaurantCard: React.FunctionComponent<IRestaurantCardProps> = (props) =>
           <View
             style={{
               width: 100,
-              height: 100
+              height: 100,
+              paddingRight: 5
             }}>
             <Image
               style={{
-                height: '100%'
+                height: '100%',
+                borderRadius: 200
               }}
               resizeMode='cover'
               source={{

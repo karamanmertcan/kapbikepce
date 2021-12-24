@@ -8,6 +8,7 @@ import {
   StatusBar,
   Image
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryCard from '../components/CategoryCard';
 import RestaurantCard from '../components/ResteurantCard';
@@ -20,34 +21,46 @@ import { userState, getTokenAndUserFromStorage } from '../store';
 
 interface IHomeScreenProps {}
 
+const Loading = () => {
+  return (
+    <View
+      style={{
+        height: 200,
+        width: 200,
+        backgroundColor: '#f2f'
+      }}>
+      <Text>Yükleniyor</Text>
+    </View>
+  );
+};
+
 const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useAtom(userState);
   const [restaurants, setRestaurants] = useState<any>([]);
   const [searchBarText, setSearchBarText] = useState<any>(``);
   const windowHeight = useWindowDimensions().height;
 
-  console.log(userToken);
-
   const getRestaurants = async () => {
-    const { data } = await axios.get('http://192.168.1.2:8000/api/get-restaurants', {
-      headers: {
-        Authorization: `Bearer ${userToken.token}`
-      }
-    });
-    console.log(data);
-    setRestaurants(data);
+    const token = await AsyncStorage.getItem('token');
+    let userTok = token && JSON.parse(token);
+    try {
+      const { data } = await axios.get('http://192.168.1.50:8000/api/get-restaurants', {
+        headers: {
+          Authorization: `Bearer ${userTok}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('restaurants =>', data);
+      setIsLoading(false);
+      setRestaurants(data);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(true);
+    }
   };
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-    console.log(text);
-  } else if (location) {
-    text = JSON.stringify(location);
-    console.log(text);
-  }
 
   useEffect(() => {
     getRestaurants();
@@ -85,11 +98,15 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
               paddingBottom: 300
             }}>
             <Text style={styles.restaurantHeader}>Restaurantlar</Text>
-            {restaurants &&
+            {isLoading ? (
+              <Loading />
+            ) : (
+              restaurants &&
               restaurants.length > 0 &&
               restaurants.map((restaurant: any) => (
                 <RestaurantCard restaurant={restaurant} key={restaurant._id} />
-              ))}
+              ))
+            )}
           </View>
         </ScrollView>
       </View>

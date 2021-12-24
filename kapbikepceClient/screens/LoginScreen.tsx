@@ -37,7 +37,7 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
       });
     } else {
       try {
-        const { data } = await axios.post('http://192.168.1.2:8000/api/login', {
+        const { data } = await axios.post('http://192.168.1.50:8000/api/login', {
           email: input.email,
           password: input.password
         });

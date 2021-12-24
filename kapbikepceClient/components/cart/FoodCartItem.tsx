@@ -12,7 +12,9 @@ interface IFoodCartItemProps {
     price: number;
     description: string;
     category: string;
-    image: string;
+    image: {
+      url: string;
+    };
     rating: {
       rate: number;
       count: number;
@@ -28,25 +30,8 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
   const navigation = useNavigation<any>();
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('FoodDetailsScreen', {
-          itemId: props.item.id
-        });
-      }}>
+    <TouchableOpacity>
       <View style={styles.cartItem}>
-        <View style={styles.cartItemLeft}>
-          <Image
-            style={{
-              height: 100,
-              width: '100%',
-              resizeMode: 'contain'
-            }}
-            source={{
-              uri: `${props.item.image.url}`
-            }}
-          />
-        </View>
         <View style={styles.cartItemRight}>
           <View
             style={{
@@ -62,8 +47,8 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
             />
           </View>
           <View>
-            <Text style={styles.cartItemRightText}>{props.item.text}</Text>
-            <Text style={styles.cartItemRightDesc}>{props.item.description?.slice(0, 20)}</Text>
+            <Text style={styles.cartItemRightText}>{props.item.title}</Text>
+            <Text style={styles.cartItemRightDesc}>{props.item.description}</Text>
           </View>
           <View
             style={{
@@ -123,17 +108,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 10
   },
-  cartItemLeft: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-    flex: 2
-  },
+
   cartItemRight: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    flex: 4
+    flex: 1
   },
   cartItemRightText: {
     fontWeight: 'bold',

@@ -26,7 +26,9 @@ export const getTokenAndUserFromStorage = atom(
           user: bakeToJsonUser,
           token: bakeToJsonToken
         });
+        console.log('token var');
       } else {
+        console.log('token or user is null');
         set(isAuthenticated, false);
       }
     } catch (error) {
@@ -75,7 +77,7 @@ export const addItemToCart = atom(
     Object.assign(product, { quantity: 1 });
 
     if (getItemsFromLocal !== null && itemToParse.length >= 1) {
-      const existItem = itemToParse.find((item: any) => item.id === product.id);
+      const existItem = itemToParse.find((item: any) => item._id === product._id);
 
       // console.log('existItem', existItem);
 
@@ -85,6 +87,7 @@ export const addItemToCart = atom(
           message: 'Sepete Eklendi',
           type: 'success'
         });
+        console.log(product);
         const jsonValue = JSON.stringify([...itemToParse, product]);
         await AsyncStorage.setItem('cart', jsonValue);
 
@@ -117,7 +120,7 @@ export const removeFromCart = atom(
     const getItemsFromLocal = await AsyncStorage.getItem('cart');
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
-    const filterItems = itemToParse.filter((item: any) => item.id !== product.id);
+    const filterItems = itemToParse.filter((item: any) => item._id !== product._id);
     console.log('filter items =>', filterItems);
     set(storageItems, filterItems);
     await AsyncStorage.setItem('cart', JSON.stringify(filterItems));

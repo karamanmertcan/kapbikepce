@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -36,44 +37,45 @@ interface FakeStoreApi {
   };
 }
 
-const IsCartEmpty = () => {
+const LoadingSpinner = () => {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        justifyContent: 'center'
       }}>
-      <ActivityIndicator size='small' color='#0000ff' />
+      <Image
+        style={{ width: 100, height: 100, alignSelf: 'center' }}
+        source={require('../assets/spinner.gif')}
+      />
     </View>
   );
 };
 
 const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props) => {
   const [restaurantData, setRestaurantData] = React.useState<any>([]);
+  const [restaurantProducts, setRestaurantProducts] = React.useState<any>([]);
   const [userToken, setUserToken] = useAtom(userState);
   const [isLoading, setIsLoading] = React.useState(false);
   const refRBSheet = React.useRef<any>();
-
-  const windowHeight = useWindowDimensions().height;
-  const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const isFocused = useIsFocused();
 
   const { restaurantId } = route.params;
 
-  const getProductsFromApi = async () => {
+  const getRestaurantFromApi = async () => {
+    const token = await AsyncStorage.getItem('token');
+    let userTok = token && JSON.parse(token);
     try {
       setIsLoading(true);
       const { data } = await axios.get(
-        `http://192.168.1.2:8000/api/get-restaurant/${restaurantId}`,
+        `http://192.168.1.50:8000/api/get-restaurant/${restaurantId}`,
         {
           headers: {
-            Authorization: `Bearer ${userToken.token}`
+            Authorization: `Bearer ${userTok}`
           }
         }
       );
-      console.log('restaurant data', data);
       setRestaurantData(data);
       setIsLoading(false);
     } catch (error) {
@@ -81,6 +83,33 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
       setIsLoading(false);
     }
   };
+
+  const getProductsFromApi = async () => {
+    const token = await AsyncStorage.getItem('token');
+    let userTok = token && JSON.parse(token);
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(
+        `http://192.168.1.50:8000/api/get-restaurant-products/${restaurantId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userTok}`
+          }
+        }
+      );
+      setRestaurantProducts(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isFocused) {
+      getRestaurantFromApi();
+    }
+  }, [props, isFocused]);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -94,116 +123,121 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
       <View style={[styles.container]}>
         <Header routeName={route.name} />
-        <View
-          style={{
-            flex: 2
-          }}>
-          <Image
-            style={{
-              height: '100%'
-            }}
-            resizeMode='cover'
-            source={{
-              uri: `${restaurantData.image?.url}`
-            }}
-          />
-        </View>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <View
+              style={{
+                flex: 2
+              }}>
+              <Image
+                style={{
+                  height: '100%'
+                }}
+                resizeMode='cover'
+                source={{
+                  uri: `${restaurantData[0]?.image?.url}`
+                }}
+              />
+            </View>
 
-        <View
-          style={{
-            flex: 4,
-            flexDirection: 'column',
-            padding: 20
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-            <Text style={styles.restaurantHeader}>{restaurantData.restaurantName}</Text>
-            <View style={styles.rateBox}>
-              <Text>5</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flex: 1
-            }}>
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingTop: 10
+                flex: 4,
+                flexDirection: 'column',
+                padding: 20
               }}>
-              <Entypo name='location' size={16} color='black' />
-              <Text
+              <View
                 style={{
-                  marginLeft: 10
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
                 }}>
-                19 Mayıs Caddesi 19 Mayıs Mahallesi
-              </Text>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingTop: 10
-              }}>
-              <AntDesign name='clockcircleo' size={16} color='black' />
-              <Text
+                <Text style={styles.restaurantHeader}>{restaurantData[0]?.restaurantName}</Text>
+                <View style={styles.rateBox}>
+                  <Text>5</Text>
+                </View>
+              </View>
+              <View
                 style={{
-                  marginLeft: 10
+                  flex: 1
                 }}>
-                Açık 07:00 - 21:00
-              </Text>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: 10
-              }}>
-              <TouchableOpacity onPress={() => refRBSheet.current.open()}>
-                <View style={styles.commentBox}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingTop: 10
+                  }}>
+                  <Entypo name='location' size={16} color='black' />
                   <Text
                     style={{
-                      marginRight: 10
+                      marginLeft: 10
                     }}>
-                    Yorumlar
+                    {restaurantData[0]?.address}
                   </Text>
-                  <FontAwesome name='comments' size={24} color='black' />
                 </View>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <CommentBottomSheet refRBSheet={refRBSheet} />
-            </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingTop: 10
+                  }}>
+                  <AntDesign name='clockcircleo' size={16} color='black' />
+                  <Text
+                    style={{
+                      marginLeft: 10
+                    }}>
+                    Açık {restaurantData[0]?.openHours}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingTop: 10
+                  }}>
+                  <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                    <View style={styles.commentBox}>
+                      <Text
+                        style={{
+                          marginRight: 10
+                        }}>
+                        Yorumlar
+                      </Text>
+                      <FontAwesome name='comments' size={24} color='black' />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <CommentBottomSheet refRBSheet={refRBSheet} />
+                </View>
 
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                width: '100%',
-                height: 100,
-                overflow: 'hidden',
-                borderRadius: 10,
-                paddingTop: 10
-              }}>
-              <ScrollView>
-                {restaurantData &&
-                  restaurantData.items &&
-                  restaurantData.items.map((food: any) => (
-                    <RestaurantFoodCard key={food._id} food={food} />
-                  ))}
-              </ScrollView>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    width: '100%',
+                    height: 100,
+                    overflow: 'hidden',
+                    borderRadius: 10,
+                    paddingTop: 10
+                  }}>
+                  <ScrollView>
+                    {restaurantProducts &&
+                      restaurantProducts.map((food: any) => (
+                        <RestaurantFoodCard key={food._id} food={food} />
+                      ))}
+                  </ScrollView>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
+          </>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -252,3 +286,115 @@ const styles = StyleSheet.create({
 });
 
 export default RestaurantScreen;
+
+/**
+ <View
+          style={{
+            flex: 2
+          }}>
+          <Image
+            style={{
+              height: '100%'
+            }}
+            resizeMode='cover'
+            source={{
+              uri: `${restaurantData[0]?.image?.url}`
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            flex: 4,
+            flexDirection: 'column',
+            padding: 20
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+            <Text style={styles.restaurantHeader}>{restaurantData[0]?.restaurantName}</Text>
+            <View style={styles.rateBox}>
+              <Text>5</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 1
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 10
+              }}>
+              <Entypo name='location' size={16} color='black' />
+              <Text
+                style={{
+                  marginLeft: 10
+                }}>
+                {restaurantData[0]?.address}
+              </Text>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 10
+              }}>
+              <AntDesign name='clockcircleo' size={16} color='black' />
+              <Text
+                style={{
+                  marginLeft: 10
+                }}>
+                Açık {restaurantData[0]?.openHours}
+              </Text>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 10
+              }}>
+              <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                <View style={styles.commentBox}>
+                  <Text
+                    style={{
+                      marginRight: 10
+                    }}>
+                    Yorumlar
+                  </Text>
+                  <FontAwesome name='comments' size={24} color='black' />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <CommentBottomSheet refRBSheet={refRBSheet} />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                width: '100%',
+                height: 100,
+                overflow: 'hidden',
+                borderRadius: 10,
+                paddingTop: 10
+              }}>
+              <ScrollView>
+                {restaurantProducts &&
+                  restaurantProducts.map((food: any) => (
+                    <RestaurantFoodCard key={food._id} food={food} />
+                  ))}
+              </ScrollView>
+            </View>
+          </View>
+        </View> 
+*/

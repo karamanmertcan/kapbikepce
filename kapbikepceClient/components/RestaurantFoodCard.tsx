@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 interface IRestaurantFoodCardProps {
   food: {
+    title: string;
     restaurantName: string;
     image: {
       url: string;
@@ -14,6 +15,8 @@ interface IRestaurantFoodCardProps {
     items: Array<any>;
     rating: Array<any>;
     _id: string;
+    description: string;
+    price: string;
   };
 }
 
@@ -21,26 +24,12 @@ const RestaurantFoodCard: React.FunctionComponent<IRestaurantFoodCardProps> = (p
   const [_, setAddItem] = useAtom(addItemToCart);
   const navigation = useNavigation<any>();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('FoodDetailsScreen', {
-          itemId: props.food.id
-        });
-      }}>
+    <TouchableOpacity>
       <View style={[styles.restaurantFoodCard]}>
         <View style={styles.container}>
-          <View style={styles.foodCardLeft}>
-            <Image
-              style={styles.foodImage}
-              source={{
-                uri: `${props.food.image.url}`
-              }}
-              resizeMode='contain'
-            />
-          </View>
           <View style={styles.foodCardRight}>
-            <Text style={styles.foodTitle}>{props.food.text}</Text>
-            <Text>{props.food.description}...</Text>
+            <Text style={styles.foodTitle}>{props.food.title}</Text>
+            <Text>{props.food.description}</Text>
             <View style={styles.addToCartContainer}>
               <Text>{props.food.price} TL</Text>
               <View
@@ -81,15 +70,12 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   foodTitle: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold'
   },
-  foodCardLeft: {
-    flex: 2,
-    justifyContent: 'center'
-  },
+
   foodCardRight: {
-    flex: 4,
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center'
   },

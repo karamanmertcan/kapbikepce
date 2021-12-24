@@ -29,6 +29,7 @@
     "react-native-gesture-handler": "^2.0.0",
     "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-pager-view": "5.4.6",
     "react-native-paper": "^4.10.1",
     "react-native-raw-bottom-sheet": "^2.2.0",
