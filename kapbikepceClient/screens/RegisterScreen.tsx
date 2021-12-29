@@ -32,7 +32,7 @@ const Register: React.FunctionComponent<IRegisterProps> = (props) => {
       });
     } else {
       try {
-        const { data } = await axios.post('http://192.168.1.6:8000/api/register', {
+        const { data } = await axios.post('http://192.168.177.194:8000/api/register', {
           name: input.firstName,
           lastName: input.lastName,
           email: input.email,

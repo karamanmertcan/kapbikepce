@@ -9,6 +9,7 @@ interface UserState {}
 export const storageItems = atom([]);
 export const isAuthenticated = atom(false);
 export const userState = atom({});
+export const total = atom(0);
 
 export const getTokenAndUserFromStorage = atom(
   () => '',
@@ -132,9 +133,21 @@ export const getItemsFromStorage = atom(
   async (get, set) => {
     const value = await AsyncStorage.getItem('cart');
     const bakeToJson = JSON.parse(value || '{}');
-    // console.log(bakeToJson);
+    console.log(bakeToJson);
+    const totalPrice = bakeToJson.reduce(
+      (
+        acc: any,
+        cur: {
+          price: number;
+          quantity: number;
+        }
+      ) => acc + cur.price * cur.quantity,
+      0
+    );
+
     set(storageItems, bakeToJson);
     // console.log('baketojson =>', bakeToJson);
+    set(total, totalPrice);
   }
 );
 
@@ -145,11 +158,34 @@ export const decreaseQty = atom(
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
     const findItem = itemToParse.map((item: any) =>
-      item.id === product.id ? { ...item, quantity: (item.quantity -= 1) } : item
+      item.id === product.id
+        ? { ...item, quantity: item.quantity > 1 ? (item.quantity -= 1) : 1 }
+        : item
+    );
+
+    const getItems = get(storageItems);
+    const totalPrice = itemToParse.reduce(
+      (acc: any, cur: any) => acc + cur.price * cur.quantity,
+      0
     );
 
     set(storageItems, findItem);
+    set(total, totalPrice);
+
     await AsyncStorage.setItem('cart', JSON.stringify(findItem));
+  }
+);
+
+export const calculateCartTotal = atom(
+  () => '',
+  async (get, set) => {
+    const getItems = get(storageItems);
+    const totalPrice = getItems.reduce(
+      (acc, cur: { price: number; quantity: number }) => acc + cur.price * cur.quantity,
+      0
+    );
+    console.log(totalPrice);
+    set(total, totalPrice);
   }
 );
 
@@ -162,6 +198,14 @@ export const increaseQty = atom(
     const findItem = itemToParse.map((item: any) =>
       item.id === product.id ? { ...item, quantity: (item.quantity += 1) } : item
     );
+
+    const totalPrice = itemToParse.reduce(
+      (acc: any, cur: { quantity: number; price: number }) => acc + cur.price * cur.quantity,
+      0
+    );
+
+    set(storageItems, findItem);
+    set(total, totalPrice);
 
     set(storageItems, findItem);
     await AsyncStorage.setItem('cart', JSON.stringify(findItem));

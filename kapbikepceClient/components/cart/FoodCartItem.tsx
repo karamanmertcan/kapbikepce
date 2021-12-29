@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAtom } from 'jotai';
-import { removeFromCart, decreaseQty, increaseQty } from '../../store';
+import { removeFromCart, decreaseQty, increaseQty, calculateCartTotal } from '../../store';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -70,7 +70,13 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                   backgroundColor: '#ff4757',
                   borderRadius: 10
                 }}>
-                <Button title='-' color='#fff' onPress={() => setDecreaseItemQty(props.item)} />
+                <Button
+                  title='-'
+                  color='#fff'
+                  onPress={() => {
+                    setDecreaseItemQty(props.item);
+                  }}
+                />
               </View>
               <View
                 style={{
@@ -86,7 +92,13 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                   backgroundColor: '#ff4757',
                   borderRadius: 10
                 }}>
-                <Button title='+' color='#fff' onPress={() => setIncreaseItemQty(props.item)} />
+                <Button
+                  title='+'
+                  color='#fff'
+                  onPress={() => {
+                    setIncreaseItemQty(props.item);
+                  }}
+                />
               </View>
             </View>
           </View>

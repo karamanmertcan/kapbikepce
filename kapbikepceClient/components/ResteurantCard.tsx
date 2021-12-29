@@ -42,7 +42,7 @@ const RestaurantCard: React.FunctionComponent<IRestaurantCardProps> = (props) =>
               }}
               resizeMode='cover'
               source={{
-                uri: `${restaurant.image.url}`
+                uri: `${restaurant?.image?.url}`
               }}
             />
           </View>

@@ -47,7 +47,7 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
     const token = await AsyncStorage.getItem('token');
     let userTok = token && JSON.parse(token);
     try {
-      const { data } = await axios.get('http://192.168.1.50:8000/api/get-restaurants', {
+      const { data } = await axios.get('http://192.168.177.194:8000/api/get-restaurants', {
         headers: {
           Authorization: `Bearer ${userTok}`,
           'Content-Type': 'application/json'
