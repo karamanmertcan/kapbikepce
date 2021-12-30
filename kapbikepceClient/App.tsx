@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import IntroSlider from './components/IntroSlider';
 import TabNavigation from './navigations/TabNavigation';
 import axios from 'axios';
+import AppSplashScreen from './screens/SplashScreen';
 
 export default function App() {
   const [auth, setAuth] = useAtom(getTokenAndUserFromStorage);

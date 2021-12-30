@@ -9,6 +9,7 @@ import TabNavigation from '../navigations/TabNavigation';
 import RestaurantScreen from '../screens/RestaurantScreen';
 import { isAuthenticated } from '../store';
 import FoodDetailsScreen from '../screens/FoodDetailsScreen';
+import AppSplashScreen from '../screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
