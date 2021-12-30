@@ -72,7 +72,7 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                 }}>
                 <Button
                   title='-'
-                  color='#fff'
+                  color='#ff4757'
                   onPress={() => {
                     setDecreaseItemQty(props.item);
                   }}
@@ -94,7 +94,7 @@ const FoodCartItem: React.FunctionComponent<IFoodCartItemProps> = (props) => {
                 }}>
                 <Button
                   title='+'
-                  color='#fff'
+                  color='#ff4757'
                   onPress={() => {
                     setIncreaseItemQty(props.item);
                   }}

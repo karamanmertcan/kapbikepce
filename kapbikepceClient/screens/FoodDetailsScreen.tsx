@@ -40,7 +40,6 @@ const FoodDetailsScreen: React.FunctionComponent<IFoodDetailsScreenProps> = (pro
     );
     setProductData(data);
   };
-  console.log(productData);
 
   useEffect(() => {
     getSingleProduct();

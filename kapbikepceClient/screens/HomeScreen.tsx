@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CategoryCard from '../components/CategoryCard';
 import RestaurantCard from '../components/ResteurantCard';
 import SeacrhBarComp from '../components/SearchBar';
 import * as Location from 'expo-location';
@@ -47,7 +46,7 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
     const token = await AsyncStorage.getItem('token');
     let userTok = token && JSON.parse(token);
     try {
-      const { data } = await axios.get('http://192.168.177.194:8000/api/get-restaurants', {
+      const { data } = await axios.get(`/get-restaurants`, {
         headers: {
           Authorization: `Bearer ${userTok}`,
           'Content-Type': 'application/json'
@@ -78,12 +77,12 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
             Kap Bir Kepçe
           </Text>
         </View>
-        <View
+        {/* <View
           style={{
             marginTop: '5%'
           }}>
           <SeacrhBarComp searchBarText={searchBarText} setSearchBarText={setSearchBarText} />
-        </View>
+        </View> */}
         {/* <View>
           <Text>{JSON.stringify(product, null>, 4)}</Text>
         </View> */}

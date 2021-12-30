@@ -45,28 +45,11 @@ const CartScreen: React.FunctionComponent<ICartScreenProps> = (props) => {
   const route = useRoute();
   const isFocused = useIsFocused();
 
-  interface ReduceTotal {
-    cur: {
-      quantity: number;
-      price: number;
-    };
-  }
-
-  const calculateCartTotals = () => {
-    const totalPrice: number = storageItem.reduce(
-      (acc, cur: { quantity: number; price: number }) => acc + cur.price * cur.quantity,
-      0
-    );
-    console.log(totalPrice);
-    setTotalPriceOfCart(totalPrice);
-  };
-
   React.useEffect(() => {
     if (isFocused) {
       setStoreItems();
     }
     setTotalCart();
-    console.log(price);
   }, [props, isFocused, arrayStoreItems]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
@@ -138,7 +121,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 60,
     width: '100%',
-    borderRadius: 30
+    borderRadius: 30,
+    overflow: 'hidden'
   },
   priceContainerLeft: {
     flex: 4,
@@ -156,10 +140,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#171717',
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3
+    backgroundColor: '#ecf0f1'
   }
 });
 

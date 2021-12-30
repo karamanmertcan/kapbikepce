@@ -3,17 +3,70 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useAtom } from 'jotai';
 import { userState } from '../../store';
-interface IUserInfosProps {}
+import axios from 'axios';
+import { showMessage } from 'react-native-flash-message';
 
-const UserInfos: React.FunctionComponent<IUserInfosProps> = (props) => {
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    name?: string;
+    lastName?: string;
+    address?: string;
+  }
+}
+
+interface User {
+  user: {
+    user: {
+      name: string;
+    };
+  };
+}
+
+const UserInfos: React.FC<User> = (props) => {
   const [user, setUser] = useAtom(userState);
-  const [userForm, setUserForm] = React.useState({
+  const [userForm, setUserForm] = React.useState<{
+    name: string;
+    email: string;
+    surname: string;
+    address: string;
+    phoneNumber: string;
+  }>({
     email: user?.user?.email,
     name: user?.user?.name,
     surname: user?.user?.lastName,
     address: user?.user?.address,
     phoneNumber: ''
   });
+
+  const handleUpdateUserForm = async () => {
+    try {
+      const { data } = await axios.put(
+        '/user-update',
+        {
+          name: userForm.name,
+          lastName: userForm.surname,
+          address: userForm.address
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!data) return;
+
+      showMessage({
+        message: 'Bilgileriniz guncellendi',
+        type: 'success'
+      });
+
+      setUser({ token: user.token, user: data.user });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.formContainer}>
@@ -54,7 +107,7 @@ const UserInfos: React.FunctionComponent<IUserInfosProps> = (props) => {
         />
         <Button
           mode='contained'
-          onPress={() => console.log(userForm)}
+          onPress={handleUpdateUserForm}
           style={{
             marginTop: 10
           }}>

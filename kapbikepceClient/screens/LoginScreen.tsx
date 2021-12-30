@@ -37,7 +37,7 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
       });
     } else {
       try {
-        const { data } = await axios.post('http://192.168.177.194:8000/api/login', {
+        const { data } = await axios.post('/login', {
           email: input.email,
           password: input.password
         });
@@ -61,8 +61,6 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
             type: 'danger'
           });
         }
-
-        console.log(data);
       } catch (error) {
         console.log(error);
         showMessage({

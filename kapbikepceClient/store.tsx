@@ -2,14 +2,16 @@ import { atom } from 'jotai';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { showMessage, hideMessage } from 'react-native-flash-message';
-import { useEffect } from 'react';
-
+import { useAtom } from 'jotai';
 interface UserState {}
+
+axios.defaults.baseURL = 'http://kapbirkepce.herokuapp.com/api';
 
 export const storageItems = atom([]);
 export const isAuthenticated = atom(false);
-export const userState = atom({});
+export const userState = atom<any>({});
 export const total = atom(0);
+export const myToken = atom('');
 
 export const getTokenAndUserFromStorage = atom(
   () => '',
@@ -27,9 +29,8 @@ export const getTokenAndUserFromStorage = atom(
           user: bakeToJsonUser,
           token: bakeToJsonToken
         });
-        console.log('token var');
+        set(myToken, bakeToJsonToken);
       } else {
-        console.log('token or user is null');
         set(isAuthenticated, false);
       }
     } catch (error) {
@@ -79,8 +80,21 @@ export const addItemToCart = atom(
 
     if (getItemsFromLocal !== null && itemToParse.length >= 1) {
       const existItem = itemToParse.find((item: any) => item._id === product._id);
+      const differentRestaurantItem = itemToParse.every(
+        (item: any) => item.restaurant !== product.restaurant
+      );
 
-      // console.log('existItem', existItem);
+      console.log('every different', differentRestaurantItem);
+      console.log('farklı urun', differentRestaurantItem);
+
+      if (differentRestaurantItem) {
+        console.log('farklı urun var');
+        showMessage({
+          message: 'Farklı bir restorant sepete eklenemez',
+          type: 'danger'
+        });
+        return false;
+      }
 
       if (!existItem) {
         console.log('selam sepet');
@@ -88,29 +102,29 @@ export const addItemToCart = atom(
           message: 'Sepete Eklendi',
           type: 'success'
         });
-        console.log(product);
         const jsonValue = JSON.stringify([...itemToParse, product]);
         await AsyncStorage.setItem('cart', jsonValue);
 
-        // console.log('local storage is not available');
+        console.log('local storage is not available');
+        set(storageItems, [...itemToParse, product]);
       } else {
         showMessage({
           message: 'Ürün Daha Önce Sepete Eklendi',
-          type: 'default'
+          type: 'danger'
         });
 
         // console.log('exist item', existItem);
       }
     } else {
-      // console.log('selam sepet else');
+      console.log('newcart');
       showMessage({
         message: 'Sepete Eklendi',
         type: 'success'
       });
       const newCartItems = [product];
-      console.log('newCartItems', newCartItems);
 
       await AsyncStorage.setItem('cart', JSON.stringify(newCartItems));
+      set(storageItems, newCartItems);
     }
   }
 );
@@ -122,7 +136,6 @@ export const removeFromCart = atom(
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
     const filterItems = itemToParse.filter((item: any) => item._id !== product._id);
-    console.log('filter items =>', filterItems);
     set(storageItems, filterItems);
     await AsyncStorage.setItem('cart', JSON.stringify(filterItems));
   }
@@ -133,7 +146,6 @@ export const getItemsFromStorage = atom(
   async (get, set) => {
     const value = await AsyncStorage.getItem('cart');
     const bakeToJson = JSON.parse(value || '{}');
-    console.log(bakeToJson);
     const totalPrice = bakeToJson.reduce(
       (
         acc: any,
@@ -146,7 +158,6 @@ export const getItemsFromStorage = atom(
     );
 
     set(storageItems, bakeToJson);
-    // console.log('baketojson =>', bakeToJson);
     set(total, totalPrice);
   }
 );
@@ -158,7 +169,7 @@ export const decreaseQty = atom(
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
     const findItem = itemToParse.map((item: any) =>
-      item.id === product.id
+      item._id === product._id
         ? { ...item, quantity: item.quantity > 1 ? (item.quantity -= 1) : 1 }
         : item
     );
@@ -184,7 +195,6 @@ export const calculateCartTotal = atom(
       (acc, cur: { price: number; quantity: number }) => acc + cur.price * cur.quantity,
       0
     );
-    console.log(totalPrice);
     set(total, totalPrice);
   }
 );
@@ -196,7 +206,7 @@ export const increaseQty = atom(
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
     const findItem = itemToParse.map((item: any) =>
-      item.id === product.id ? { ...item, quantity: (item.quantity += 1) } : item
+      item._id === product._id ? { ...item, quantity: (item.quantity += 1) } : item
     );
 
     const totalPrice = itemToParse.reduce(
@@ -207,7 +217,6 @@ export const increaseQty = atom(
     set(storageItems, findItem);
     set(total, totalPrice);
 
-    set(storageItems, findItem);
     await AsyncStorage.setItem('cart', JSON.stringify(findItem));
   }
 );

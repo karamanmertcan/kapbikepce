@@ -9,6 +9,8 @@ import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FoodDetailsScreen from '../screens/FoodDetailsScreen';
+import { useAtom } from 'jotai';
+import { storageItems } from '../store';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +48,8 @@ function Home() {
 }
 
 export default function TabNavigation() {
+  const [cartItems] = useAtom(storageItems);
+
   return (
     <Tab.Navigator
       initialRouteName='Home'
@@ -71,6 +75,7 @@ export default function TabNavigation() {
         component={CartScreen}
         options={{
           headerShown: false,
+          tabBarBadge: cartItems.length,
           tabBarIcon: ({ size, color }) => <Entypo name='shopping-basket' size={24} color='white' />
         }}
       />

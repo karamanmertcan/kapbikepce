@@ -68,14 +68,11 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
     let userTok = token && JSON.parse(token);
     try {
       setIsLoading(true);
-      const { data } = await axios.get(
-        `http://192.168.177.194:8000/api/get-restaurant/${restaurantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userTok}`
-          }
+      const { data } = await axios.get(`/get-restaurant/${restaurantId}`, {
+        headers: {
+          Authorization: `Bearer ${userTok}`
         }
-      );
+      });
       setRestaurantData(data);
       setIsLoading(false);
     } catch (error) {
@@ -89,14 +86,11 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
     let userTok = token && JSON.parse(token);
     try {
       setIsLoading(true);
-      const { data } = await axios.get(
-        `http://192.168.177.194:8000/api/get-restaurant-products/${restaurantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userTok}`
-          }
+      const { data } = await axios.get(`/get-restaurant-products/${restaurantId}`, {
+        headers: {
+          Authorization: `Bearer ${userTok}`
         }
-      );
+      });
       setRestaurantProducts(data);
       setIsLoading(false);
     } catch (error) {
