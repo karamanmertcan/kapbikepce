@@ -2,7 +2,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import React, { useEffect } from 'react';
 import FlashMessage from 'react-native-flash-message';
 import StackScreen from './navigations/StackScreen';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { useAtom } from 'jotai';
 import { getTokenAndUserFromStorage, userState } from './store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

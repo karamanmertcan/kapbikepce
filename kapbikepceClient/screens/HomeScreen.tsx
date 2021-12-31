@@ -17,6 +17,7 @@ import axios from 'axios';
 import HomeScreenCarousel from '../components/HomeScreenCarousel';
 import { useAtom } from 'jotai';
 import { userState, getTokenAndUserFromStorage } from '../store';
+import MyStatusBar from '../components/statusbar/StatusBarComp';
 
 interface IHomeScreenProps {}
 
@@ -68,6 +69,8 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
       <View style={[styles.container]}>
+        <MyStatusBar backgroundColor='#ff4757' barStyle='light-content' />
+
         <View style={styles.header}>
           <Text
             style={{
@@ -77,15 +80,7 @@ const HomeScreen: React.FunctionComponent<IHomeScreenProps> = (props) => {
             Kap Bir Kepçe
           </Text>
         </View>
-        {/* <View
-          style={{
-            marginTop: '5%'
-          }}>
-          <SeacrhBarComp searchBarText={searchBarText} setSearchBarText={setSearchBarText} />
-        </View> */}
-        {/* <View>
-          <Text>{JSON.stringify(product, null>, 4)}</Text>
-        </View> */}
+
         <ScrollView>
           <View style={styles.categoryCard}>
             <HomeScreenCarousel />

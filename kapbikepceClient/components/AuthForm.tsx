@@ -26,9 +26,9 @@ const AuthForm: React.FC<IAuthFormProps> = (props: IAuthFormProps) => {
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='email'
@@ -48,9 +48,9 @@ const AuthForm: React.FC<IAuthFormProps> = (props: IAuthFormProps) => {
             onChangeText={onChange}
             mode='outlined'
             secureTextEntry={true}
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='password'

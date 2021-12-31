@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import FoodCartItem from '../components/cart/FoodCartItem';
 import RestaurantFoodCard from '../components/RestaurantFoodCard';
 import { useAtom } from 'jotai';
+import MyStatusBar from '../components/statusbar/StatusBarComp';
 
 interface ICartScreenProps {}
 
@@ -53,6 +54,8 @@ const CartScreen: React.FunctionComponent<ICartScreenProps> = (props) => {
   }, [props, isFocused, arrayStoreItems]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
+      <MyStatusBar backgroundColor='#ff4757' barStyle='light-content' />
+
       <View style={styles.container}>
         <Header />
         <View style={styles.titleContainer}>

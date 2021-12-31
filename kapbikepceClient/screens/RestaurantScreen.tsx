@@ -21,6 +21,7 @@ import RestaurantFoodCard from '../components/RestaurantFoodCard';
 import CommentBottomSheet from '../components/comments/CommentBottomSheet';
 import { useAtom } from 'jotai';
 import { userState } from '../store';
+import MyStatusBar from '../components/statusbar/StatusBarComp';
 
 interface IRestaurantScreenProps {}
 
@@ -115,6 +116,8 @@ const RestaurantScreen: React.FunctionComponent<IRestaurantScreenProps> = (props
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
+      <MyStatusBar backgroundColor='#ff4757' barStyle='light-content' />
+
       <View style={[styles.container]}>
         <Header routeName={route.name} />
         {isLoading ? (

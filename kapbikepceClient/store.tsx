@@ -49,7 +49,6 @@ export const getUserFromStorage = atom(
 
       if (bakeToJsonUser) {
         set(userState, bakeToJsonUser);
-        // console.log('user from storage', bakeToJsonUser);
       }
     } catch (error) {
       console.log(error);
@@ -108,12 +107,22 @@ export const addItemToCart = atom(
         console.log('local storage is not available');
         set(storageItems, [...itemToParse, product]);
       } else {
-        showMessage({
-          message: 'Ürün Daha Önce Sepete Eklendi',
-          type: 'danger'
-        });
+        const findItem = itemToParse.map((item: any) =>
+          item._id === product._id ? { ...item, quantity: (item.quantity += 1) } : item
+        );
 
-        // console.log('exist item', existItem);
+        const totalPrice = itemToParse.reduce(
+          (acc: any, cur: { quantity: number; price: number }) => acc + cur.price * cur.quantity,
+          0
+        );
+
+        set(storageItems, findItem);
+        set(total, totalPrice);
+        await AsyncStorage.setItem('cart', JSON.stringify(findItem));
+        showMessage({
+          message: 'Miktar Arttırıldı.',
+          type: 'success'
+        });
       }
     } else {
       console.log('newcart');
@@ -136,7 +145,14 @@ export const removeFromCart = atom(
     const itemToParse = getItemsFromLocal && JSON.parse(getItemsFromLocal);
 
     const filterItems = itemToParse.filter((item: any) => item._id !== product._id);
+    const totalPrice = filterItems.reduce(
+      (acc: any, cur: any) => acc + cur.price * cur.quantity,
+      0
+    );
+
     set(storageItems, filterItems);
+    set(total, totalPrice);
+
     await AsyncStorage.setItem('cart', JSON.stringify(filterItems));
   }
 );

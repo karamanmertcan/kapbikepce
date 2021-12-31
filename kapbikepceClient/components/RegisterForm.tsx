@@ -27,9 +27,9 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props: IRegisterFormProps) =
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='firstName'
@@ -48,9 +48,9 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props: IRegisterFormProps) =
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='lastName'
@@ -69,9 +69,9 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props: IRegisterFormProps) =
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='email'
@@ -90,12 +90,33 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props: IRegisterFormProps) =
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
-            selectionColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
           />
         )}
         name='address'
+      />
+      {props.errors.address && <Text>Adres zorunludur !</Text>}
+
+      <Controller
+        control={props.control}
+        rules={{
+          required: true
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label='Telefon Numarası'
+            onBlur={onBlur}
+            value={value}
+            onChangeText={onChange}
+            mode='outlined'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
+            selectionColor='#2c3e50'
+          />
+        )}
+        name='phoneNumber'
       />
       {props.errors.address && <Text>Adres zorunludur !</Text>}
 
@@ -111,27 +132,15 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props: IRegisterFormProps) =
             value={value}
             onChangeText={onChange}
             mode='outlined'
-            outlineColor='#ff4757'
-            activeOutlineColor='#ff4757'
+            outlineColor='#2c3e50'
+            activeOutlineColor='#2c3e50'
             secureTextEntry={true}
-            selectionColor='#ff4757'
+            selectionColor='#2c3e50'
           />
         )}
         name='password'
       />
       {props.errors.password && <Text>Şifre zorunludur !</Text>}
-
-      <Button
-        mode='contained'
-        onPress={props.handleSubmit(props.onSubmit)}
-        style={{
-          marginTop: '10%',
-          backgroundColor: '#ff4757',
-          padding: 5,
-          borderRadius: 20
-        }}>
-        Uye Ol
-      </Button>
     </View>
   );
 };

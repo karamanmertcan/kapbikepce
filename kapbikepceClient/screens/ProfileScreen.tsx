@@ -8,7 +8,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import UserAvatar from 'react-native-user-avatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import Header from '../components/Header';
@@ -16,6 +15,8 @@ import UserInfoBottomSheet from '../components/userInfo/UserInfoBottomSheet';
 import OldOrdersBottomSheet from '../components/userInfo/OldOrdersBottomSheet';
 import { useAtom } from 'jotai';
 import { userState, logoutUser, getUserFromStorage } from '../store';
+import MyStatusBar from '../components/statusbar/StatusBarComp';
+import { getRandomColor } from '../helpers';
 
 interface IProfileScreenProps {
   user: {
@@ -37,30 +38,9 @@ interface FakeStoreApi {
   };
 }
 
-const IsCartEmpty = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: 'bold'
-        }}>
-        Daha Once Hic Siparis Verilmemis
-      </Text>
-      <View>
-        <Entypo name='emoji-sad' size={44} color='black' />
-      </View>
-    </View>
-  );
-};
-
 const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
   const [user, setUser] = useAtom(userState);
+  const [randomColor, setRandomColor] = useState('');
   const [getUser, setGetUser] = useAtom(getUserFromStorage);
   const [, setLogoutUser] = useAtom(logoutUser);
   const [address, setAddress] = useState(
@@ -75,20 +55,13 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
   const refRBSheet = React.useRef<any>();
   const oldOrdersRefRBSheet = React.useRef<any>();
 
-  const getProductsFromApi = async () => {
-    const data = await fetch('https://fakestoreapi.com/products');
-    const res = await data.json();
-    setOrders(res);
-  };
-
-  // React.useEffect(() => {
-  //   if (isFocused) {
-  //     setGetUser();
-  //   }
-  // }, [props, isFocused]);
+  React.useEffect(() => {
+    setRandomColor(getRandomColor());
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ff4757' }}>
+      <MyStatusBar backgroundColor='#ff4757' barStyle='light-content' />
       <View style={styles.container}>
         <Header />
         <ScrollView>
@@ -102,15 +75,15 @@ const ProfileScreen: React.FunctionComponent<IProfileScreenProps> = (props) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#f2f',
-                borderRadius: 200
+                backgroundColor: `${randomColor}`,
+                borderRadius: 150 / 2,
+                overflow: 'hidden'
               }}>
-              <Text style={styles.avatarName}>{user?.user?.name?.charAt(0).toUpperCase()}</Text>
+              <Text style={styles.avatarName}>{user?.user?.name?.charAt(0).toUpperCase()} </Text>
               <Text style={styles.avatarName}>{user?.user?.lastName?.charAt(0).toUpperCase()}</Text>
             </View>
             <Text style={styles.username}>
-              {user?.user?.name}
-              {user?.user?.lastName}
+              {user?.user?.name} {user?.user?.lastName}
             </Text>
           </View>
           <View style={styles.userInfos}>
